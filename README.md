@@ -4,5 +4,5 @@ As part of a school project, elternbrief is intended to be a web application bui
 As soon as the project is finished, the whole documentation is going to be made available online.
 
 ## Deploying
-1. Adjust elternbrief/settings.py
+1. Adjust elternbrief/settings.py (change database settings, timezone etc.)
 2. TBC
