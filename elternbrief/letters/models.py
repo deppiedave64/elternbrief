@@ -39,4 +39,4 @@ class Student(models.Model):
     groups = models.ManyToManyField(Group, verbose_name="Gruppen", blank=True)
 
     def __str__(self):
-        return self.first_name + self.last_name + ", " + str(self.class_group)
+        return self.first_name + " " + self.last_name + ", " + str(self.class_group)
