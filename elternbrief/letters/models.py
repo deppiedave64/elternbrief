@@ -33,6 +33,13 @@ class Letter(models.Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def by_child(child):
+        letters = [letter for letter in Letter.objects.filter(classes_concerned__name=child.class_group)] + \
+                  [letter for letter in [Letter.objects.filter(groups_concerned__name=child.groups.all()[i])[0] for i in
+                                         range(child.groups.count())]]
+        return letters
+
 
 class Student(models.Model):
     # parents = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="Erziehungsberechtigte", blank=True)
@@ -45,17 +52,17 @@ class Student(models.Model):
         return self.first_name + " " + self.last_name + ", " + str(self.class_group)
 
 
-class Parent(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     children = models.ManyToManyField(Student, verbose_name="Kinder", blank=True)
 
 
 @receiver(post_save, sender=User)
-def create_user_parent(sender, instance, created, **kwargs):
+def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Parent.objects.create(user=instance)
+        Profile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
-def save_user_parent(sender, instance, **kwargs):
-    instance.parent.save()
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

@@ -3,5 +3,13 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
-    <p>Du bist eingeloggt!</p>
+    <p>Folgende Elternbriefe müssen bestätigt werden:</p>
+
+    {% for child in children_list %}
+        <h3>{{ child }}</h3>
+        {% for letter in letters.child.id %}
+            <p>{{ letter }}</p>
+        {% endfor %}
+    {% endfor %}
+
 {% endblock %}

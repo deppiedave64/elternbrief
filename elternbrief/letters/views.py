@@ -1,14 +1,26 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
 
+from .models import Letter
+
 
 def index(request):
-    context = {}
-
     if request.user.is_authenticated:
-        return render(request, 'letters/index_logged_in.html', context)
+        if hasattr(request.user, 'profile'):
+            children_list = request.user.profile.children.all()
+            context = {
+                'children_list': children_list,
+                'letters': {child.id: Letter.by_child(child) for child in children_list}
+            }
+            return render(request, 'letters/index_logged_in.html', context)
+        else:
+            context = {
+                'error_message': "Sie sind mit einem Nutzer eingeloggt, der nicht vollständig registriert ist!"
+            }
+            return render(request, 'letters/index.html', context)
+
     else:
-        return render(request, 'letters/index.html', context)
+        return render(request, 'letters/index.html')
 
 
 def login(request):
