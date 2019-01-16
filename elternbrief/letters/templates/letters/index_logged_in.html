@@ -1,9 +1,13 @@
-{% extends "letters/index_logged_in.html" %}
+{% extends "letters/base.html" %}
+
+{% block title %}Index{% endblock %}
 
 {% block login %}
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-teal" title="Search"><i class="fa fa-user"></i> Eingeloggt</a>
+    <a href="" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-teal" title="Search"><i class="fa fa-user"></i> {{ user.username }}</a>
 {% endblock %}
 
 {% block content %}
-    Du bist eingeloggt!
+    <div class="w3-container w3-padding-64 w3-center" id="main">
+        <p>Du bist eingeloggt!</p>
+    </div>
 {% endblock %}
