@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Elternbrief - {% block title %}Startseite{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'letters/w3.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'letters/w3-theme-black.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+{% block navbar %}
+    <div class="w3-top">
+        <div class="w3-bar w3-theme-d2 w3-left-align">
+            <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button w3-teal"><i
+                    class="fa fa-home w3-margin-right"></i>Elternbrief</a>
+            {% block login %}
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'letters:login' %}" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-teal"
+                   title="Search"><i class="fa fa-user"></i> {{ request.user.username }}</a>
+                {% else %}
+                   <a href="{% url 'letters:login' %}" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-teal"
+                   title="Search"><i class="fa fa-user-circle"></i> Login</a>
+                {% endif %}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    base.html
+{% endblock %}
+</body>
+</html>
