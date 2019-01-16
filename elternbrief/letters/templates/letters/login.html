@@ -2,37 +2,33 @@
 
 {% block content %}
 
-    <div class="w3-row w3-padding-64 w3-center">
-
-        {% if badlogin %}
-            <div class="w3-panel w3-red">
-                <h3>Login fehlgeschlagen!</h3>
-                <p>Bitte überprüfen Sie Ihre Anmeldeinformationen und versuchen Sie es erneut</p>
-            </div>
-        {% endif %}
-
-        <div class="w3-quarter"><p></p></div>
-
-        <div class="w3-card-4 w3-half">
-            <header class="w3-container w3-theme-d2 w3-left-align">
-                <h1>Login</h1>
-            </header>
-            <div class="w3-container w3-left-align">
-                <form action="{% url 'letters:login' %}" method="post">
-                    {% csrf_token %}
-                    <label>Nutzername</label>
-                    <input class="w3-input" type="text" name="username" id="username">
-
-                    <label>Passwort</label>
-                    <input class="w3-input" type="password" name="password" id="password">
-
-                    <button class="w3-btn w3-theme-d2" type="submit">Absenden</button>
-                </form>
-            </div>
+    {% if badlogin %}
+        <div class="w3-panel w3-red">
+            <h3>Login fehlgeschlagen!</h3>
+            <p>Bitte überprüfen Sie Ihre Anmeldeinformationen und versuchen Sie es erneut</p>
         </div>
+    {% endif %}
 
-        <div class="w3-quarter"><p></p></div>
+    <div class="w3-quarter"><p></p></div>
 
+    <div class="w3-card-4 w3-half">
+        <header class="w3-container w3-theme-d2 w3-left-align">
+            <h1>Login</h1>
+        </header>
+        <div class="w3-container w3-left-align">
+            <form action="{% url 'letters:login' %}" method="post">
+                {% csrf_token %}
+                <label>Nutzername</label>
+                <input class="w3-input" type="text" name="username" id="username">
+
+                <label>Passwort</label>
+                <input class="w3-input" type="password" name="password" id="password">
+
+                <button class="w3-btn w3-theme-d2" type="submit">Absenden</button>
+            </form>
+        </div>
     </div>
+
+    <div class="w3-quarter"><p></p></div>
 
 {% endblock %}

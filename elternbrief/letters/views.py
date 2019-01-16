@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as dj_login
+from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
 
 
 def index(request):
@@ -26,3 +26,8 @@ def login(request):
 
     else:
         return render(request, 'letters/login.html')
+
+
+def logout(request):
+    dj_logout(request)
+    return redirect('letters:index')
