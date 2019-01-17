@@ -1,5 +1,7 @@
 {% extends "letters/base.html" %}
 
+{% load letters_extras %}
+
 {% block title %}Index{% endblock %}
 
 {% block content %}
@@ -7,9 +9,11 @@
 
     {% for child in children_list %}
         <h3>{{ child }}</h3>
-        {% for letter in letters.child.id %}
-            <p>{{ letter }}</p>
-        {% endfor %}
+        {% with child_id=child.id %}
+            {% for letter in letters|get_item:child_id %}
+                <p>{{ letter }}</p>
+            {% endfor %}
+        {% endwith %}
     {% endfor %}
 
 {% endblock %}
