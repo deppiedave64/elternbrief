@@ -1,0 +1,45 @@
+{% extends 'letters/base.html' %}
+
+{% block title %}Detailansicht{% endblock %}
+
+{% block content %}
+    <div class="w3-row w3-center">
+
+        <div class="w3-col m2 l4 w3-hide-small"><p></p></div>
+
+        <div class="w3-col m8 l4 s12">
+            <div class="w3-card-4">
+
+                <header class="w3-container w3-theme-d2 w3-left-align">
+                    <h1>{{ letter }}</h1>
+                </header>
+                <div class="w3-container w3-left-align">
+                    <p><b>Veröffentlichungsdatum:</b> {{ letter.date_published }}</p>
+                </div>
+
+                {% if letter.date_due %} }}
+                    <div class="w3-container w3-left-align">
+                        <p><b>Fällig bis:</b> {{ letter.date_due }}</p>
+                    </div>
+                {% endif %}
+
+                {% if letter.teacher %}
+                    <div class="w3-container w3-left-align">
+                        <p><b>Zuständige Lehrkraft:</b> {{ letter.teacher }}</p>
+                    </div>
+                {% endif %}
+
+                <div class="w3-container w3-left-align">
+                    <p><b>Muss {% if letter.confirmation == True %}nicht {% endif %}bestätigt werden.</b> <i class="fa fa-info-circle"></i></p>
+                </div>
+
+                <div class="w3-container">
+{#                    <embed src="{%  %}">#}
+                </div>
+            </div>
+        </div>
+
+        <div class="w3-col m2 l4 w3-hide-small"><p></p></div>
+
+    </div>
+{% endblock %}

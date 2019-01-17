@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
 
 from .models import Letter
@@ -21,6 +21,16 @@ def index(request):
 
     else:
         return render(request, 'letters/index.html')
+
+
+def letters(request):
+    return render(request, 'letters/letters_index.html')
+
+
+def letter_detail(request, letter_id):
+    letter = get_object_or_404(Letter, pk=letter_id)
+    context = {'letter': letter}
+    return render(request, 'letters/letter_detail.html', context)
 
 
 def login(request):

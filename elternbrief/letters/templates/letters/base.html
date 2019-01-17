@@ -18,8 +18,19 @@
 {% block navbar %}
     <div class="w3-top">
         <div class="w3-bar w3-theme-d2 w3-left-align">
-            <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button w3-teal"><i
-                    class="fa fa-home w3-margin-right"></i>Elternbrief</a>
+            {% if request.path == '/' %}
+                <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button w3-teal"><i
+                        class="fa fa-home w3-margin-right"></i>Startseite</a>
+            {% else %}
+                <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button"><i
+                        class="fa fa-home w3-margin-right"></i>Startseite</a>
+            {% endif %}
+
+            {% if '/letters/' in request.path %}
+                <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button w3-teal">Elternbriefe</a>
+            {% else %}
+                <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button">Elternbriefe</a>
+            {% endif %}
 
             {% block login %}
                 {% if request.user.is_authenticated %}

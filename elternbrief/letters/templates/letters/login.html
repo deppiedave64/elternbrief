@@ -1,11 +1,13 @@
 {% extends "letters/base.html" %}
 
+{% block title %}Login{% endblock %}
+
 {% block content %}
 
     {% if badlogin %}
         <div class="w3-panel w3-red">
             <h3>Login fehlgeschlagen!</h3>
-            <p>Bitte überprüfen Sie Ihre Anmeldeinformationen und versuchen Sie es erneut</p>
+            <p>Bitte überprüfen Sie Ihre Anmeldeinformationen und versuchen Sie es erneut.</p>
         </div>
     {% endif %}
 
