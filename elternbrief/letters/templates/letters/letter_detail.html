@@ -1,6 +1,7 @@
 {% extends 'letters/base.html' %}
+{% load static %}
 
-{% block title %}Detailansicht{% endblock %}
+{% block title %}{{ letter }}t{% endblock %}
 
 {% block content %}
     <div class="w3-row w3-center">
@@ -33,8 +34,9 @@
                     <p><b>Muss {% if letter.confirmation == True %}nicht {% endif %}bestätigt werden.</b> <i class="fa fa-info-circle"></i></p>
                 </div>
 
-                <div class="w3-container">
-{#                    <embed src="{%  %}">#}
+                <div class="w3-container" id="canvas">
+{#                    <a href="{% static 'letters/pdf.js-gh-pages/web/viewer.html' %}?file=%2F{{ letter.document.url }}">Open PDF</a>#}
+                    <embed src="{{ letter.document.url }}" type="application/pdf" width="100%" height="600px"/>
                 </div>
             </div>
         </div>
@@ -43,3 +45,39 @@
 
     </div>
 {% endblock %}
+
+{#<script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>#}
+{#<script>#}
+{#    var url = '{{ letter.document.url }}';#}
+{#    var pdfjsLib = window["pdfjs-dist/build/pdf"];#}
+{#    pdfjsLib.GlobalWorkerOptions.workerSrc = "//mozilla.github.io/pdf.js/build/pdf.worker.js";#}
+{##}
+{#    var loadingTask = pdfjsLib.getDocument(url);#}
+{#    loadingTask.promise.then(function(pdf) {#}
+{#      console.log('PDF loaded');#}
+{##}
+{#      var pageNumber = 1;#}
+{#      pdf.getPage(pageNumber).then(function(page) {#}
+{#        console.log('Page loaded');#}
+{##}
+{#        var scale = 1.5;#}
+{#        var viewport = page.getViewport({scale: scale});#}
+{##}
+{#        var canvas = document.getElementById('canvas');#}
+{#        var context = canvas.getContext('2d');#}
+{#        canvas.height = viewport.height;#}
+{#        canvas.width = viewport.width;#}
+{##}
+{#        var renderContext = {#}
+{#          canvasContext: context,#}
+{#          viewport: viewport#}
+{#        };#}
+{#        var renderTask = page.render(renderContext);#}
+{#        renderTask.promise.then(function () {#}
+{#          console.log('Page rendered');#}
+{#        });#}
+{#      });#}
+{#    }, function (reason) {#}
+{#      console.error(reason);#}
+{#    });#}
+{#</script>#}
