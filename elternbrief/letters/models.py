@@ -42,7 +42,6 @@ class Letter(models.Model):
 
 
 class Student(models.Model):
-    # parents = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="Erziehungsberechtigte", blank=True)
     first_name = models.CharField("Vorname", max_length=30)
     last_name = models.CharField("Nachname", max_length=30)
     class_group = models.ForeignKey(ClassGroup, verbose_name="Klasse", on_delete=models.PROTECT)
