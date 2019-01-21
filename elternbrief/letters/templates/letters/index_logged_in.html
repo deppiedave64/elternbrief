@@ -11,7 +11,7 @@
         <h3>{{ child }}</h3>
         {% with child_id=child.id %}
             {% for letter in letters|get_item:child_id %}
-                <p>{{ letter }}</p>
+                <p><a href="{% url 'letters:letter_detail'  letter.pk %}">{{ letter }}</a></p>
             {% endfor %}
         {% endwith %}
     {% endfor %}
