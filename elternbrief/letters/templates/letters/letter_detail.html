@@ -18,7 +18,7 @@
                     <p><b>Veröffentlichungsdatum:</b> {{ letter.date_published }}</p>
                 </div>
 
-                {% if letter.date_due %} }}
+                {% if letter.date_due %}
                     <div class="w3-container w3-left-align">
                         <p><b>Fällig bis:</b> {{ letter.date_due }}</p>
                     </div>
@@ -31,7 +31,7 @@
                 {% endif %}
 
                 <div class="w3-container w3-left-align">
-                    <p><b>Muss {% if letter.confirmation == True %}nicht {% endif %}bestätigt werden.</b> <i class="fa fa-info-circle"></i></p>
+                    <p><b>Muss {% if not letter.confirmation %}nicht {% endif %}bestätigt werden.</b> <i class="fa fa-info-circle"></i></p>
                 </div>
 
                 <div class="w3-container" id="canvas">
