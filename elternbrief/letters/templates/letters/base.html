@@ -15,6 +15,7 @@
 
 <body>
 
+{# Just a simple navbar. Buttons have different colors if they link to the current page. #}
 {% block navbar %}
     <div class="w3-top">
         <div class="w3-bar w3-theme-d2 w3-left-align">
@@ -34,11 +35,13 @@
 
             {% block login %}
                 {% if request.user.is_authenticated %}
+                    {# If the user is logged in, show their username and a logout button in a dropdown menu #}
                     <div class="w3-dropdown-hover w3-right">
                         <button class="w3-button" style="width:125px"><i class="fa fa-user"></i> {{ user.username }}
                         </button>
                         <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                            <a href="{% url 'letters:logout' %}" class="w3-bar-item w3-button"><i class="fa fa-sign-out"></i> Ausloggen</a>
+                            <a href="{% url 'letters:logout' %}" class="w3-bar-item w3-button"><i
+                                    class="fa fa-sign-out"></i> Ausloggen</a>
                         </div>
                     </div>
                 {% else %}
@@ -51,6 +54,7 @@
     </div>
 {% endblock %}
 
+{# Display any kind of error message passed by a view in a fancy red box. #}
 <div class="w3-container w3-padding-64 w3-center" id="main">
     {% if error_message %}
         <div class="w3-panel w3-red">

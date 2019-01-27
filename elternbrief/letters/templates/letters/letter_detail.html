@@ -6,6 +6,7 @@
 {% block content %}
     <div class="w3-row w3-center">
 
+        {# Just an empty placeholder container to make the content stay centered. #}
         <div class="w3-col m2 l4 w3-hide-small"><p></p></div>
 
         <div class="w3-col m8 l4 s12">
@@ -31,7 +32,8 @@
                 {% endif %}
 
                 <div class="w3-container w3-left-align">
-                    <p><b>Muss {% if not letter.confirmation %}nicht {% endif %}bestätigt werden.</b> <i class="fa fa-info-circle"></i></p>
+                    <p><b>Muss {% if not letter.confirmation %}nicht {% endif %}bestätigt werden.</b> <i
+                            class="fa fa-info-circle"></i></p>
                 </div>
 
                 <div class="w3-container" id="canvas">
@@ -40,6 +42,7 @@
             </div>
         </div>
 
+        {# Another empty placeholder container to make the content stay centered. #}
         <div class="w3-col m2 l4 w3-hide-small"><p></p></div>
 
     </div>

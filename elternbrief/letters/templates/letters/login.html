@@ -4,6 +4,7 @@
 
 {% block content %}
 
+    {# Display an error message if the user has previously tried to login with wrong credentials. #}
     {% if badlogin %}
         <div class="w3-panel w3-red">
             <h3>Login fehlgeschlagen!</h3>

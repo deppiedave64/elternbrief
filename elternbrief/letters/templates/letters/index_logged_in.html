@@ -7,6 +7,7 @@
 {% block content %}
     <p>Folgende Elternbriefe müssen bestätigt werden:</p>
 
+    {# Display all children of user as well as all corresponding letters. #}
     {% for child in children_list %}
         <h3>{{ child }}</h3>
         {% with child_id=child.id %}
