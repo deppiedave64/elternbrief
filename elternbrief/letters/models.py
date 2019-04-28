@@ -37,7 +37,7 @@ class Letter(models.Model):
 
     @staticmethod
     def by_student(student):
-        """Returns a list of  letters that concern a certain student.
+        """Returns a list of letters that concern a certain student.
         Searches for letters concerning all the groups as well as the class group the student is a member of."""
         letters = [letter for letter in Letter.objects.filter(classes_concerned__name=student.class_group)] + \
                   [letter for letter in
