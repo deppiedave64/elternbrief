@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
+from django.contrib import messages
 
 from .models import Letter
 
 
-def index(request):
+def index(request, error_message=None):
     """Simple homepage."""
 
     # Show a different page if user is logged in:
@@ -28,13 +29,37 @@ def index(request):
 
     # Show normal index to anonymous users:
     else:
+        if error_message:
+            context = {'error_message': error_message}
         return render(request, 'letters/index.html')
 
 
 def letters(request):
     """Index of the letters section.
     Has not yet been created - just a placeholder page."""
-    return render(request, 'letters/letters_index.html')
+
+    # Only show page if user is logged in:
+    if request.user.is_authenticated:
+        # Make sure that the User has an associated Profile object:
+        if hasattr(request.user, 'profile'):
+            # Retrieve list of all students the user is allowed to view letters for:
+            children_list = request.user.profile.children.all()
+            context = {
+                'children_list': children_list,
+                # Dictionary of ids of all children, associated with the letters that concern them:
+                'letters': {child.id: Letter.by_student(child) for child in children_list}
+            }
+            return render(request, 'letters/letters_index.html', context)
+        else:
+            # Show error message if the User has now associated Profile object:
+            error_message = "Sie sind mit einem Nutzer eingeloggt, der nicht vollständig registriert ist!"
+
+    # Redirect anonymous users to index and show an error message:
+    else:
+        error_message = "Sie sind momentan nicht eingeloggt. Bitte loggen Sie sich ein, um ihre Übersicht anzuzeigen."
+
+    messages.error(request, message=error_message)
+    return redirect('letters:index')
 
 
 def letter_detail(request, letter_id):

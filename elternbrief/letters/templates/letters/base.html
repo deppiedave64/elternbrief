@@ -56,11 +56,13 @@
 
 {# Display any kind of error message passed by a view in a fancy red box. #}
 <div class="w3-container w3-padding-64 w3-center" id="main">
-    {% if error_message %}
-        <div class="w3-panel w3-red">
-            <h2>Fehler!</h2>
-            <p>{{ error_message }}</p>
-        </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="w3-panel w3-red">
+                <h2>Fehler!</h2>
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
     {% endif %}
     {% block content %}
     {% endblock %}
