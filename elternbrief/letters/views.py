@@ -12,14 +12,7 @@ def index(request, error_message=None):
     if request.user.is_authenticated:
         # Make sure that the User has an associated Profile object:
         if hasattr(request.user, 'profile'):
-            # Retrieve list of all students the user is allowed to view letters for:
-            children_list = request.user.profile.children.all()
-            context = {
-                'children_list': children_list,
-                # Dictionary of ids of all children, associated with the letters that concern them:
-                'letters': {child.id: Letter.by_student(child) for child in children_list}
-            }
-            return render(request, 'letters/index_logged_in.html', context)
+            return render(request, 'letters/index_logged_in.html')
         else:
             # Show error message if the User has now associated Profile object:
             context = {

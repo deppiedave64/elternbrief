@@ -1,8 +1,12 @@
 {% extends "letters/base.html" %}
 
-{% block title %}Index{% endblock %}
+{% block title %}Startseite{% endblock %}
 
 {% block content %}
-    <p>Sie sehen: den Index.</p>
-    <p>Sie sind nicht eingeloggt!</p>
+    <p>Herzlich willkommen bei <i>Elternbrief</i>!</p>
+    <p>Sie sehen die Startseite.</p>
+
+    {% block login_notice %}
+        <p>Sie sind momentan nicht eingeloggt. Bitte loggen Sie sich ein, um die Anwendung zu nutzen.</p>
+    {% endblock %}
 {% endblock %}

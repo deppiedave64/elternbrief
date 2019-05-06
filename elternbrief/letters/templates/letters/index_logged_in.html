@@ -1,20 +1,8 @@
-{% extends "letters/base.html" %}
+{% extends "letters/index.html" %}
 
-{% load letters_extras %}
+{% block title %}Startseite{% endblock %}
 
-{% block title %}Index{% endblock %}
-
-{% block content %}
-    <p>Folgende Elternbriefe müssen bestätigt werden:</p>
-
-    {# Display all children of user as well as all corresponding letters. #}
-    {% for child in children_list %}
-        <h3>{{ child }}</h3>
-        {% with child_id=child.id %}
-            {% for letter in letters|get_item:child_id %}
-                <p><a href="{% url 'letters:letter_detail'  letter.pk %}">{{ letter }}</a></p>
-            {% endfor %}
-        {% endwith %}
-    {% endfor %}
-
+{% block login_notice %}
+    <p>Sie sind eingeloggt als Nutzer {{ request.user.username }}.</p>
+    <p>Öffnen Sie die Übersicht, um neue Elternbriefe anzuzeigen.</p>
 {% endblock %}
