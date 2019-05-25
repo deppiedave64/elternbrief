@@ -1,6 +1,11 @@
 import django
 from django.test import TestCase
+from django.test import Client
 from unittest.mock import MagicMock
+
+from django.utils import timezone
+from django.contrib.auth.models import User
+import datetime
 
 from .models import Student, Letter, ClassGroup, Group
 
@@ -122,3 +127,34 @@ class LetterModelTests(TestCase):
         test_letter.save()
 
         self.assertNotIn(test_letter, Letter.by_student(test_student))
+
+
+class LetterViewTests(TestCase):
+
+    def test_do_not_show_future_letters(self):
+        """letter view does not show a certain letter, if its publication date is in the future."""
+
+        test_class = ClassGroup(name="Test class")
+        test_class.save()
+
+        test_student = Student(first_name="John", last_name="Doe", class_group=test_class)
+        test_student.save()
+
+        test_document = MagicMock(spec=django.core.files.File, name="Test document")
+        test_document.name = 'test.pdf'
+
+        publication_date = timezone.now() + datetime.timedelta(days=1)
+        test_letter = Letter(name="Test letter", document=test_document, date_published=publication_date)
+        test_letter.save()
+        test_letter.classes_concerned.add(test_class)
+        test_letter.save()
+
+        test_parent = User.objects.create_user('test_parent', password='test_password')
+        test_parent.profile.children.add(test_student)
+        test_parent.save()
+
+        c = Client()
+        c.post('/login/', {'username': 'test_parent', 'password': 'test_password'}, follow=True)
+
+        response = c.get("/letters/")
+        self.assertNotContains(response, "Test letter")

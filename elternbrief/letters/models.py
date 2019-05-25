@@ -38,10 +38,15 @@ class Letter(models.Model):
     @staticmethod
     def by_student(student):
         """Returns a list of letters that concern a certain student.
-        Searches for letters concerning all the groups as well as the class group the student is a member of."""
-        letters = [letter for letter in Letter.objects.filter(classes_concerned__name=student.class_group)] + \
+        Searches for letters concerning all the groups as well as the class group the student is a member of.
+        Does not return a letter if its publication date is in the future."""
+
+        time = timezone.now()
+        letters = [letter for letter in
+                   Letter.objects.filter(classes_concerned__name=student.class_group, date_published__lte=time)] + \
                   [letter for letter in
-                   [Letter.objects.filter(groups_concerned__name=student.groups.all()[i])[0] for i in
+                   [Letter.objects.filter(groups_concerned__name=student.groups.all()[i], date_published__lte=time)[0]
+                    for i in
                     range(student.groups.count())]]
         return letters
 
