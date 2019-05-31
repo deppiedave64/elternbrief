@@ -9,8 +9,13 @@
     <title>Elternbrief - {% block title %}Startseite{% endblock %}</title>
 
     <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/lib/w3-theme-indigo.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        body, h1, h2, h3, h4, h5, h6 {font-family: 'Open Sans', sans-serif}
+    </style>
 </head>
 
 <body>
@@ -18,9 +23,9 @@
 {# Just a simple navbar. Buttons have different colors if they link to the current page. #}
 {% block navbar %}
     <div class="w3-top">
-        <div class="w3-bar w3-theme-d2 w3-left-align">
+        <div class="w3-bar w3-card w3-large w3-left-align w3-theme">
             {% if request.path == '/' %}
-                <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button w3-teal"><i
+                <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button w3-theme-l1"><i
                         class="fa fa-home w3-margin-right"></i>Startseite</a>
             {% else %}
                 <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button"><i
@@ -28,7 +33,7 @@
             {% endif %}
 
             {% if '/letters/' in request.path %}
-                <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button w3-teal">Elternbriefe</a>
+                <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button w3-theme-l1">Elternbriefe</a>
             {% else %}
                 <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button">Elternbriefe</a>
             {% endif %}
@@ -45,7 +50,7 @@
                         </div>
                     </div>
                 {% else %}
-                    <a href="{% url 'letters:login' %}" class="w3-bar-item w3-button w3-right w3-hover-teal"><i
+                    <a href="{% url 'letters:login' %}" class="w3-bar-item w3-button w3-right w3-hover-white"><i
                             class="fa fa-user-circle"></i> Login</a>
                 {% endif %}
             {% endblock %}
