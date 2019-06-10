@@ -18,23 +18,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-        body {
-            font-family: 'Open Sans', sans-serif;
-        }
-        h1, .w3-bar, button {
-            font-family: 'Montserrat', sans-serif;
-        }
-        a img.hover {
-            display: none;
-        }
-        a img.default {
-            display: inherit;
-        }
-        a:hover img.hover {
-            display: inherit;
-        }
-        a:hover img.default {
-            display: none;
+        body { font-family: 'Open Sans', sans-serif; }
+        h1, .w3-bar, button { font-family: 'Montserrat', sans-serif; }
+
+        a img.hover { display: none; }
+        a img.default { display: inherit; }
+        a:hover img.hover { display: inherit; }
+        a:hover img.default {display: none;}
+
+        div .error { background-color: #f44336; }
+        div .warning { background-color: #ffeb3b; }
+        div .success { background-color: #4caf50; }
+        div .info { background-color: #2196f3; }
+        div .message {
+            position: absolute;
+            {#top: 0px;#}
         }
     </style>
 </head>
@@ -84,6 +82,31 @@
 
         </div>
     </div>
+{% endblock %}
+
+{% block messages %}
+    {% if messages %}
+        <div class="w3-row w3-container">
+            <div class="w3-content w3-center">
+                {% for message in messages %}
+                    <div class="w3-panel w3-card-4 w3-round-large message{% if message.tags %} {{ message.tags }}{% endif %}">
+                        <h3>
+                            {% if "error" in message.tags %}
+                                Fehler!
+                            {% elif "warning" in message.tags %}
+                                Warnung!
+                            {% elif "success" in message.tags %}
+                                Erfolg!
+                            {% else %}
+                                Hinweis
+                            {% endif %}
+                        </h3>
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
