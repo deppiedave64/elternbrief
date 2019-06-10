@@ -8,23 +8,9 @@ from .models import Letter
 def index(request, error_message=None):
     """Simple homepage."""
 
-    # Show a different page if user is logged in:
-    if request.user.is_authenticated:
-        # Make sure that the User has an associated Profile object:
-        if hasattr(request.user, 'profile'):
-            return render(request, 'letters/index_logged_in.html')
-        else:
-            # Show error message if the User has now associated Profile object:
-            context = {
-                'error_message': "Sie sind mit einem Nutzer eingeloggt, der nicht vollständig registriert ist!"
-            }
-            return render(request, 'letters/index.html', context)
-
-    # Show normal index to anonymous users:
-    else:
-        if error_message:
-            context = {'error_message': error_message}
-        return render(request, 'letters/index.html')
+    if error_message:
+        context = {'error_message': error_message}
+    return render(request, 'letters/index.html')
 
 
 def letters(request):

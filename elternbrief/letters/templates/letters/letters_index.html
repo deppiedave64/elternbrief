@@ -5,16 +5,19 @@
 {% block title %}Übersicht{% endblock %}
 
 {% block content %}
-    <p>Folgende Elternbriefe müssen bestätigt werden:</p>
+    <div class="w3-row-padding w3-padding-64 w3-container">
+        <div class="w3-content w3-center">
+            <p>Folgende Elternbriefe müssen bestätigt werden:</p>
 
-    {# Display all children of user as well as all corresponding letters. #}
-    {% for child in children_list %}
-        <h3>{{ child }}</h3>
-        {% with child_id=child.id %}
-            {% for letter in letters|get_item:child_id %}
-                <p><a href="{% url 'letters:letter_detail'  letter.pk %}">{{ letter }}</a></p>
+            {# Display all children of user as well as all corresponding letters. #}
+            {% for child in children_list %}
+                <h3>{{ child }}</h3>
+                {% with child_id=child.id %}
+                    {% for letter in letters|get_item:child_id %}
+                        <p><a href="{% url 'letters:letter_detail'  letter.pk %}">{{ letter }}</a></p>
+                    {% endfor %}
+                {% endwith %}
             {% endfor %}
-        {% endwith %}
-    {% endfor %}
-
+        </div>
+    </div>
 {% endblock %}

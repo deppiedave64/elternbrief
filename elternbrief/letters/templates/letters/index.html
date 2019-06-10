@@ -1,12 +1,25 @@
 {% extends "letters/base.html" %}
 
+{% load static %}
+
 {% block title %}Startseite{% endblock %}
 
 {% block content %}
-    <p>Herzlich willkommen bei <i>Elternbrief</i>!</p>
-    <p>Sie sehen die Startseite.</p>
+    <header class="w3-container w3-theme w3-center" style="padding:128px 16px">
+        <img src="{% static 'letters/vertical_white.svg' %}">
+        <p class="w3-xlarge">Herzlich willkommen bei <i>Elternbrief!</i></p>
+    </header>
 
-    {% block login_notice %}
-        <p>Sie sind momentan nicht eingeloggt. Bitte loggen Sie sich ein, um die Anwendung zu nutzen.</p>
-    {% endblock %}
+    <div class="w3-row-padding w3-padding-64 w3-container">
+        <div class="w3-content w3-center">
+            <p>Sie sehen die Startseite.</p>
+
+            {% if request.user.is_authenticated %}
+                <p>Sie sind eingeloggt als Nutzer {{ request.user.username }}.</p>
+                <p>Öffnen Sie die Übersicht, um neue Elternbriefe anzuzeigen.</p>
+            {% else %}
+                <p>Sie sind momentan nicht eingeloggt. Bitte loggen Sie sich ein, um die Anwendung zu nutzen.</p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
