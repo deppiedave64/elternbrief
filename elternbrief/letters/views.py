@@ -5,17 +5,14 @@ from django.contrib import messages
 from .models import Letter
 
 
-def index(request, error_message=None):
+def index(request):
     """Simple homepage."""
 
-    if error_message:
-        context = {'error_message': error_message}
     return render(request, 'letters/index.html')
 
 
 def letters(request):
-    """Index of the letters section.
-    Has not yet been created - just a placeholder page."""
+    """Index of the letters section."""
 
     # Only show page if user is logged in:
     if request.user.is_authenticated:
@@ -31,13 +28,14 @@ def letters(request):
             return render(request, 'letters/letters_index.html', context)
         else:
             # Show error message if the User has now associated Profile object:
-            error_message = "Sie sind mit einem Nutzer eingeloggt, der nicht vollständig registriert ist!"
+            messages.error(request, "Sie sind mit einem Nutzer eingeloggt, der nicht vollständig registriert ist!")
+
 
     # Redirect anonymous users to index and show an error message:
     else:
-        error_message = "Sie sind momentan nicht eingeloggt. Bitte loggen Sie sich ein, um ihre Übersicht anzuzeigen."
+        messages.error(request,
+                       "Sie sind momentan nicht eingeloggt. Bitte loggen Sie sich ein, um ihre Übersicht anzuzeigen.")
 
-    messages.error(request, message=error_message)
     return redirect('letters:index')
 
 
@@ -71,8 +69,8 @@ def login(request):
             return redirect('letters:index')
         else:
             # If credentials are wrong, redirect to this page and show an error message:
-            context = {'badlogin': True}
-            return render(request, 'letters/login.html', context=context)
+            messages.error(request, "Nutzername oder Passwort sind falsch. Bitte versuchen Sie es erneut.")
+            return render(request, 'letters/login.html')
 
     # If the user has not already entered any credentials, just show the login page:
     else:
