@@ -4,26 +4,20 @@
 
 {% block content %}
 
-    {# Display an error message if the user has previously tried to login with wrong credentials. #}
-    {% if badlogin %}
-        <div class="w3-panel w3-red">
-            <h3>Login fehlgeschlagen!</h3>
-            <p>Bitte überprüfen Sie Ihre Anmeldeinformationen und versuchen Sie es erneut.</p>
-        </div>
-    {% endif %}
-
     <div class="w3-row-padding w3-padding-64 w3-container">
         <div class="w3-content w3-center">
+
+            {# Empty div for centering the middle div #}
             <div class="w3-quarter"><p></p></div>
 
             <div class="w3-card-4 w3-half">
                 <header class="w3-container w3-theme w3-left-align">
                     <h1>Login</h1>
                 </header>
-                <div class="w3-container w3-left-align">
-                    <form action="{% url 'letters:login' %}" method="post">
+{#                <div class="w3-container w3-left-align">#}
+                    <form class="w3-container w3-left-align w3-margin-top" action="{% url 'letters:login' %}" method="post">
                         {% csrf_token %}
-                        <label>Nutzername</label>
+                        <label class="w3-margin-top">Nutzername</label>
                         <input class="w3-input w3-margin-bottom" type="text" name="username" id="username">
 
                         <label>Passwort</label>
@@ -31,9 +25,10 @@
 
                         <button class="w3-btn w3-theme-d2 w3-margin-bottom" type="submit">Absenden</button>
                     </form>
-                </div>
+{#                </div>#}
             </div>
 
+            {# Another empty div for centering the middle div #}
             <div class="w3-quarter"><p></p></div>
         </div>
     </div>
