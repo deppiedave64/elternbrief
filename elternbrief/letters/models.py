@@ -21,6 +21,24 @@ class ClassGroup(models.Model):
         return self.name
 
 
+class LetterTextField(models.Model):
+    """An optional textfield parents can fill out when acknowledging a letter."""
+    name = models.CharField(max_length=30)
+    description = models.TextField(max_length=200)
+
+
+class LetterSelectionField(models.Model):
+    """An optional selection field parents can fill out when acknowledging a letter."""
+    name = models.CharField(max_length=30)
+    description = models.TextField(max_length=200)
+
+
+class LetterBooleanField(models.Model):
+    """An optional box parents can tick or not when acknowledging a letter."""
+    name = models.CharField(max_length=30)
+    description = models.TextField(max_length=200)
+
+
 class Letter(models.Model):
     """A letter sent to parents."""
     name = models.CharField(max_length=30)
@@ -31,6 +49,9 @@ class Letter(models.Model):
     groups_concerned = models.ManyToManyField(Group, blank=True)
     classes_concerned = models.ManyToManyField(ClassGroup, blank=True)
     document = models.FileField(upload_to='documents/%Y/%m/%d/')
+    text_fields = models.ManyToManyField(LetterTextField, blank=True)
+    selection_fields = models.ManyToManyField(LetterSelectionField, blank=True)
+    boolean_fields = models.ManyToManyField(LetterBooleanField, blank=True)
 
     def __str__(self):
         return self.name
@@ -83,3 +104,10 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     """Saves the corresponding Profile whenever a User objects is saved to the database."""
     instance.profile.save()
+
+class Response(models.Model):
+    """The response to a letter."""
+    letter = models.ForeignKey(Letter, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    content = models.TextField(blank=True)
+    response_date = models.DateField(default=timezone.now)

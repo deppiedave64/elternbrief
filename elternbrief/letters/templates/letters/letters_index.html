@@ -17,7 +17,7 @@
                     <div class="w3-container">
                         {% with child_id=child.id %}
                             {% for letter in letters|get_item:child_id %}
-                                <p><a href="{% url 'letters:letter_detail'  letter.pk %}">{{ letter }}</a></p>
+                                <p><a href="{% url 'letters:letter_detail' child.pk letter.pk %}">{{ letter }}</a></p>
                             {% endfor %}
                         {% endwith %}
                     </div>

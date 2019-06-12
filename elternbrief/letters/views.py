@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
 from django.contrib import messages
 
-from .models import Letter
+from .models import Letter, Student, Response
 
 
 def index(request):
@@ -39,13 +39,27 @@ def letters(request):
     return redirect('letters:index')
 
 
-def letter_detail(request, letter_id):
+def letter_detail(request, student_id, letter_id):
     """Shows detailed information about certain Letter object."""
 
-    # Raise 404 exception if a letter with the given id does not exist.
+    # Raise 404 exception if a letter or a student with the given id does not exist.
     letter = get_object_or_404(Letter, pk=letter_id)
-    context = {'letter': letter}
-    return render(request, 'letters/letter_detail.html', context)
+    student = get_object_or_404(Student, pk=student_id)
+
+    if letter in Letter.by_student(student):
+        # Check whether there is already a response for this student and this letter:
+        try:
+            response = Response.objects.get(student__pk=student_id, letter__pk=letter_id)
+        except Response.DoesNotExist:
+            response = None
+
+        context = {'student': student, 'letter': letter, 'response': response}
+        return render(request, 'letters/letter_detail.html', context)
+    else:
+        messages.error(request,
+                       "Der angegebene Brief betrifft nicht den angegebenen Schüler. Bitte überprüfen Sie ihre Anfrage. "
+                       "Wenn Sie denkenm, dass dies nicht passieren sollte, wenden Sie sich bitte an einen Administrator.")
+        return redirect('letters:letters')
 
 
 def login(request):
