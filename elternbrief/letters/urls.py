@@ -11,5 +11,7 @@ urlpatterns = [
                   path('logout/', views.logout, name='logout'),
                   path('letters/', views.letters, name='letters'),
                   path('letters/<int:student_id>/<int:letter_id>/', views.letter_detail, name='letter_detail'),
+                  path('letters/<int:student_id>/<int:letter_id>/confirm/', views.letter_detail, {'confirmation': True},
+                       name='letter_confirm'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # Allow uploaded files to be served as static files. Should be changed when going into production.

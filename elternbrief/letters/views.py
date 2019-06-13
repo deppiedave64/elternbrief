@@ -39,8 +39,23 @@ def letters(request):
     return redirect('letters:index')
 
 
-def letter_detail(request, student_id, letter_id):
+def letter_detail(request, student_id, letter_id, confirmation=False):
     """Shows detailed information about certain Letter object."""
+
+    # Process letter confirmation:
+    if confirmation:
+        if Response.objects.filter(student__id=student_id, letter__id=letter_id):
+            messages.error(request, "Für diesen Brief und diesen Schüler liegt bereits eine Bestätigung vor.")
+            return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
+
+        if not Letter.objects.get(id=letter_id).confirmation:
+            messages.error(request, "Dieser Brief muss nicht bestätigt werden!")
+            return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
+
+        Response.objects.create(letter=Letter.objects.get(id=letter_id),
+                                student=Student.objects.get(id=student_id)).save()
+        messages.success(request, "Brief wurde erfolgreich bestätigt!")
+        return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
 
     # Raise 404 exception if a letter or a student with the given id does not exist.
     letter = get_object_or_404(Letter, pk=letter_id)
