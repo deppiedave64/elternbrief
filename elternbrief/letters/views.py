@@ -52,8 +52,14 @@ def letter_detail(request, student_id, letter_id, confirmation=False):
             messages.error(request, "Dieser Brief muss nicht bestätigt werden!")
             return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
 
+        response_content = {}
+
+        for field in request.POST.keys():
+            if field[:10] == 'textfield-':
+                response_content.update({field: request.POST[field]})
+
         Response.objects.create(letter=Letter.objects.get(id=letter_id),
-                                student=Student.objects.get(id=student_id)).save()
+                                student=Student.objects.get(id=student_id), content=response_content).save()
         messages.success(request, "Brief wurde erfolgreich bestätigt!")
         return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
 
@@ -68,7 +74,8 @@ def letter_detail(request, student_id, letter_id, confirmation=False):
         except Response.DoesNotExist:
             response = None
 
-        context = {'student': student, 'letter': letter, 'response': response}
+        context = {'student': student, 'letter': letter, 'textfield_list': letter.text_fields.all(),
+                   'response': response}
         return render(request, 'letters/letter_detail.html', context)
     else:
         messages.error(request,

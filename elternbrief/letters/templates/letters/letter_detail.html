@@ -10,7 +10,7 @@
 
         <div class="w3-col l6 m8 s12">
             <p>Sie betrachten diesen Brief gerade für den Schüler <b>{{ student }}.</b></p>
-            {% if response and letter.confirmation%}
+            {% if response and letter.confirmation %}
                 <p>
                     <i class="fa fa-check-circle" style="color: #4caf50;"></i>
                     Sie haben diesen Brief bereits am {{ response.response_date }} bestätigt.
@@ -48,11 +48,21 @@
                 </div>
 
                 {# Section for responding to a letter: #}
-                {% if not response and letter.confirmation%}
-                    <form class="w3-container w3-margin w3-left-align" action="{% url 'letters:letter_confirm' student.id letter.id %}" method="post">
+                {% if not response and letter.confirmation %}
+                    <form class="w3-container w3-margin w3-left-align"
+                          action="{% url 'letters:letter_confirm' student.id letter.id %}" method="post">
                         {% csrf_token %}
                         <h3>Diesen Brief bestätigen:</h3>
-                        <button class="w3-btn w3-theme-d2 w3-margin" type="submit"><i class="fa fa-check"></i> Bestätigen</button>
+
+                        {% for field in textfield_list %}
+                            <h4>{{ field.name }}</h4>
+                            <input class="w3-input" type="text" name="textfield-{{ field.id }}"
+                                   id="textfield-{{ field.id }}" placeholder="{{ field.description }}">
+                        {% endfor %}
+
+                        <button class="w3-btn w3-theme-d2 w3-margin" type="submit"><i class="fa fa-check"></i>
+                            Bestätigen
+                        </button>
                     </form>
                 {% endif %}
             </div>
