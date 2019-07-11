@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from .models import Group, ClassGroup, Letter, LetterTextField, Student, \
+from .models import Group, ClassGroup, Letter, Student, \
     Profile
 
 
@@ -25,5 +25,4 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Group)
 admin.site.register(ClassGroup)
 admin.site.register(Letter)
-admin.site.register(LetterTextField)
 admin.site.register(Student)

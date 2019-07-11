@@ -21,15 +21,6 @@ class ClassGroup(models.Model):
         return self.name
 
 
-class LetterTextField(models.Model):
-    """An optional textfield parents can fill out when acknowledging a letter."""
-    name = models.CharField(max_length=50)
-    description = models.TextField(max_length=300)
-
-    def __str__(self):
-        return self.name
-
-
 class Letter(models.Model):
     """A letter sent to parents."""
     name = models.CharField(max_length=30)
@@ -40,7 +31,7 @@ class Letter(models.Model):
     groups_concerned = models.ManyToManyField(Group, blank=True)
     classes_concerned = models.ManyToManyField(ClassGroup, blank=True)
     document = models.FileField(upload_to='documents/%Y/%m/%d/')
-    text_fields = models.ManyToManyField(LetterTextField, blank=True)
+    user_fields = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
