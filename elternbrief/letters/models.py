@@ -3,6 +3,43 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
+import json
+
+
+def validate_user_fields(data_str):
+    """Raise an exception if data is not valid json."""
+    try:
+        data = json.loads(data_str)
+    except json.JSONDecodeError:
+        raise ValidationError("String provided to user_fields is no valid json!")
+
+    for element in data.keys():
+        if element not in ("TextFields", "BoolFields", "SelectionFields"):
+            raise ValidationError(f"{element} is no valid element for the user_fields field.")
+
+    for element in data["TextFields"]:
+        for key in data["TextFields"][element]:
+            if key not in ("verbose_name"):
+                raise ValidationError(f"TextField {element} contains invalid element {key}.")
+        if "verbose_name" not in data["TextFields"][element]:
+            raise ValidationError(f"TextField {element} does not have a verbose name.")
+
+    for element in data["BoolFields"]:
+        for key in data["BoolFields"][element]:
+            if key not in ("verbose_name"):
+                raise ValidationError(f"BoolField {element} contains invalid element {key}.")
+        if "verbose_name" not in data["BoolFields"][element]:
+            raise ValidationError(f"BoolField {element} does not have a verbose name.")
+
+    for element in data["SelectionFields"]:
+        for key in data["SelectionFields"][element]:
+            if key not in ("verbose_name", "options"):
+                raise ValidationError(f"SelectionField {element} contains invalid element {key}.")
+        if "verbose_name" not in data["SelectionFields"][element]:
+            raise ValidationError(f"SelectionField {element} does not have a verbose name.")
+        if "options" not in data["SelectionFields"][element]:
+            raise ValidationError(f"SelectionField {element} does not have an options list.")
 
 
 class Group(models.Model):
