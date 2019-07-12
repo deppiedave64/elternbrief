@@ -54,11 +54,31 @@
                         {% csrf_token %}
                         <h3>Diesen Brief bestätigen:</h3>
 
-                        {% comment %}{% for field in textfield_list %}
-                            <h4>{{ field.name }}</h4>
-                            <input class="w3-input" type="text" name="textfield-{{ field.id }}"
-                                   id="textfield-{{ field.id }}" placeholder="{{ field.description }}">
-                        {% endfor %}{% endcomment %}
+                        {% for field in text_fields %}
+                            <p class="w3-margin-top">{{ field.description }}: {% if not field.optional %}
+                                <i class="fa fa-asterisk w3-tiny" style="color: red"></i>{% endif %}</p>
+                            <input class="w3-input w3-border w3-round w3-margin-bottom" type="text"
+                                   name="{{ field.name }}" id="{{ field.name }}">
+                        {% endfor %}
+
+                        {% for field in bool_fields %}
+                            <input class="w3-check w3-margin-top w3-margin-bottom" type="checkbox"
+                                   name="{{ field.name }}" id="{{ field.name }}">
+                            <label>{{ field.description }} {% if field.must_be_true %}
+                                <i class="fa fa-asterisk w3-tiny" style="color: red"></i>{% endif %}</label>
+                        {% endfor %}
+
+                        {% for field in selection_fields %}
+                            <p class="w3-margin-top">{{ field.description }}: <i class="fa fa-asterisk w3-tiny" style="color: red"></i></p>
+                            <select class="w3-select w3-round" name="{{ field.name }}" id="{{ field.name }}">
+                                <option value="" disabled selected>Bitte auswählen:</option>
+                                {% for option in field.options_list %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endfor %}
+
+                        <p class="w3-margin"><i class="fa fa-asterisk w3-small" style="color: red"></i> Markiert Pflichtfelder.</p>
 
                         <button class="w3-btn w3-theme-d2 w3-margin" type="submit"><i class="fa fa-check"></i>
                             Bestätigen

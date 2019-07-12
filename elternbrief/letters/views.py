@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
 from django.contrib import messages
 
+import json
+
 from .models import Letter, Student, Response
 
 
@@ -42,6 +44,10 @@ def letters(request):
 def letter_detail(request, student_id, letter_id, confirmation=False):
     """Shows detailed information about certain Letter object."""
 
+    # Raise 404 exception if a letter or a student with the given id does not exist.
+    letter = get_object_or_404(Letter, pk=letter_id)
+    student = get_object_or_404(Student, pk=student_id)
+
     # Process letter confirmation:
     if confirmation:
         if Response.objects.filter(student__id=student_id, letter__id=letter_id):
@@ -52,20 +58,15 @@ def letter_detail(request, student_id, letter_id, confirmation=False):
             messages.error(request, "Dieser Brief muss nicht bestätigt werden!")
             return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
 
-        response_content = {}
-
-        for field in request.POST.keys():
-            if field[:10] == 'textfield-':
-                response_content.update({field: request.POST[field]})
+        fields = {key: request.POST[key] for key in request.POST.keys() if "field-" in key}
+        fields.update({f"boolfield-{field.id}": False for field in list(letter.responseboolfield_set.all())})
+        response_content = json.dumps(fields)
 
         Response.objects.create(letter=Letter.objects.get(id=letter_id),
                                 student=Student.objects.get(id=student_id), content=response_content).save()
         messages.success(request, "Brief wurde erfolgreich bestätigt!")
         return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
 
-    # Raise 404 exception if a letter or a student with the given id does not exist.
-    letter = get_object_or_404(Letter, pk=letter_id)
-    student = get_object_or_404(Student, pk=student_id)
 
     if letter in student.letters:
         # Check whether there is already a response for this student and this letter:
@@ -75,6 +76,12 @@ def letter_detail(request, student_id, letter_id, confirmation=False):
             response = None
 
         context = {'student': student, 'letter': letter, 'response': response}
+
+        if not response and letter.confirmation:
+            context.update({"text_fields": list(letter.responsetextfield_set.all()),
+                            "bool_fields": list(letter.responseboolfield_set.all()),
+                            "selection_fields": list(letter.responseselectionfield_set.all())})
+
         return render(request, 'letters/letter_detail.html', context)
     else:
         messages.error(request,
