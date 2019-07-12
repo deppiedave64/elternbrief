@@ -54,11 +54,11 @@
                         {% csrf_token %}
                         <h3>Diesen Brief bestätigen:</h3>
 
-                        {% for field in textfield_list %}
+                        {% comment %}{% for field in textfield_list %}
                             <h4>{{ field.name }}</h4>
                             <input class="w3-input" type="text" name="textfield-{{ field.id }}"
                                    id="textfield-{{ field.id }}" placeholder="{{ field.description }}">
-                        {% endfor %}
+                        {% endfor %}{% endcomment %}
 
                         <button class="w3-btn w3-theme-d2 w3-margin" type="submit"><i class="fa fa-check"></i>
                             Bestätigen

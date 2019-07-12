@@ -73,21 +73,6 @@ class Letter(models.Model):
     def __str__(self):
         return self.name
 
-    @staticmethod
-    def by_student(student):
-        """Returns a list of letters that concern a certain student.
-        Searches for letters concerning all the groups as well as the class group the student is a member of.
-        Does not return a letter if its publication date is in the future."""
-
-        time = timezone.now()
-        letters = [letter for letter in
-                   Letter.objects.filter(classes_concerned__name=student.class_group, date_published__lte=time)] + \
-                  [letter for letter in
-                   [Letter.objects.filter(groups_concerned__name=student.groups.all()[i], date_published__lte=time)[0]
-                    for i in
-                    range(student.groups.count())]]
-        return letters
-
 
 class Student(models.Model):
     """A student."""
@@ -99,6 +84,17 @@ class Student(models.Model):
     def __str__(self):
         """String representation is full name followed by class group."""
         return self.first_name + " " + self.last_name + ", " + str(self.class_group)
+
+    @property
+    def letters(self):
+        """Return a list of all letters that concern this student.
+        Search for letters concerning all the groups as well as the class group the student is a member of.
+        Do not return a letter if its publication date is in the future."""
+        time = timezone.now()
+        letter_list = \
+            list(Letter.objects.filter(classes_concerned__name=self.class_group, date_published__lte=time)) + \
+            list(Letter.objects.filter(groups_concerned__in=self.groups.all(), date_published__lte=time))
+        return letter_list
 
 
 class Profile(models.Model):

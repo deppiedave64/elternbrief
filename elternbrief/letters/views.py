@@ -23,7 +23,7 @@ def letters(request):
             context = {
                 'children_list': children_list,
                 # Dictionary of ids of all children, associated with the letters that concern them:
-                'letters': {child.id: Letter.by_student(child) for child in children_list}
+                'letters': {child.id: child.letters for child in children_list}
             }
             return render(request, 'letters/letters_index.html', context)
         else:
@@ -67,15 +67,14 @@ def letter_detail(request, student_id, letter_id, confirmation=False):
     letter = get_object_or_404(Letter, pk=letter_id)
     student = get_object_or_404(Student, pk=student_id)
 
-    if letter in Letter.by_student(student):
+    if letter in student.letters:
         # Check whether there is already a response for this student and this letter:
         try:
             response = Response.objects.get(student__pk=student_id, letter__pk=letter_id)
         except Response.DoesNotExist:
             response = None
 
-        context = {'student': student, 'letter': letter, 'textfield_list': letter.text_fields.all(),
-                   'response': response}
+        context = {'student': student, 'letter': letter, 'response': response}
         return render(request, 'letters/letter_detail.html', context)
     else:
         messages.error(request,
