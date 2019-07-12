@@ -7,41 +7,6 @@ from django.core.exceptions import ValidationError
 import json
 
 
-def validate_user_fields(data_str):
-    """Raise an exception if data is not valid json."""
-    try:
-        data = json.loads(data_str)
-    except json.JSONDecodeError:
-        raise ValidationError("String provided to user_fields is no valid json!")
-
-    for element in data.keys():
-        if element not in ("TextFields", "BoolFields", "SelectionFields"):
-            raise ValidationError(f"{element} is no valid element for the user_fields field.")
-
-    for element in data["TextFields"]:
-        for key in data["TextFields"][element]:
-            if key not in ("verbose_name"):
-                raise ValidationError(f"TextField {element} contains invalid element {key}.")
-        if "verbose_name" not in data["TextFields"][element]:
-            raise ValidationError(f"TextField {element} does not have a verbose name.")
-
-    for element in data["BoolFields"]:
-        for key in data["BoolFields"][element]:
-            if key not in ("verbose_name"):
-                raise ValidationError(f"BoolField {element} contains invalid element {key}.")
-        if "verbose_name" not in data["BoolFields"][element]:
-            raise ValidationError(f"BoolField {element} does not have a verbose name.")
-
-    for element in data["SelectionFields"]:
-        for key in data["SelectionFields"][element]:
-            if key not in ("verbose_name", "options"):
-                raise ValidationError(f"SelectionField {element} contains invalid element {key}.")
-        if "verbose_name" not in data["SelectionFields"][element]:
-            raise ValidationError(f"SelectionField {element} does not have a verbose name.")
-        if "options" not in data["SelectionFields"][element]:
-            raise ValidationError(f"SelectionField {element} does not have an options list.")
-
-
 class Group(models.Model):
     """Just an arbitrary group of students."""
     name = models.CharField(max_length=30)
@@ -68,10 +33,29 @@ class Letter(models.Model):
     groups_concerned = models.ManyToManyField(Group, blank=True)
     classes_concerned = models.ManyToManyField(ClassGroup, blank=True)
     document = models.FileField(upload_to='documents/%Y/%m/%d/')
-    user_fields = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
+
+
+class ResponseTextField(models.Model):
+    """A simple text field for the response to a letter."""
+    description = models.CharField("Beschreibung", max_length=200)
+    optional = models.BooleanField("Optional", default=True)
+    letter = models.ForeignKey(Letter, on_delete=models.CASCADE)
+
+
+class ResponseBoolField(models.Model):
+    """A simple boolean field for the response to a letter."""
+    description = models.CharField("Beschreibung", max_length=200)
+    letter = models.ForeignKey(Letter, on_delete=models.CASCADE)
+
+
+class ResponseSelectionField(models.Model):
+    """A simple selection field for the response to a letter."""
+    description = models.CharField("Beschreibung", max_length=200)
+    options = models.TextField("Auswahlmöglichkeiten (kommagetrennt)")
+    letter = models.ForeignKey(Letter, on_delete=models.CASCADE)
 
 
 class Student(models.Model):
