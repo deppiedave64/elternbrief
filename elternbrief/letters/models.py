@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.core.exceptions import ValidationError
 import json
 
 
@@ -21,6 +20,29 @@ class ClassGroup(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Student(models.Model):
+    """A student."""
+    first_name = models.CharField("Vorname", max_length=30)
+    last_name = models.CharField("Nachname", max_length=30)
+    class_group = models.ForeignKey(ClassGroup, verbose_name="Klasse", on_delete=models.PROTECT)
+    groups = models.ManyToManyField(Group, verbose_name="Gruppen", blank=True)
+
+    def __str__(self):
+        """String representation is full name followed by class group."""
+        return self.first_name + " " + self.last_name + ", " + str(self.class_group)
+
+    @property
+    def letters(self):
+        """Return a list of all letters that concern this student.
+        Search for letters concerning all the groups as well as the class group the student is a member of.
+        Do not return a letter if its publication date is in the future."""
+        time = timezone.now()
+        letter_list = \
+            list(Letter.objects.filter(classes_concerned__name=self.class_group, date_published__lte=time)) + \
+            list(Letter.objects.filter(groups_concerned__in=self.groups.all(), date_published__lte=time))
+        return letter_list
 
 
 class Letter(models.Model):
