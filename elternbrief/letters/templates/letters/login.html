@@ -10,20 +10,20 @@
             {# Empty div for centering the middle div #}
             <div class="w3-quarter"><p></p></div>
 
-            <div class="w3-card-4 w3-half">
-                <header class="w3-container w3-theme w3-left-align">
+            <div class="w3-card-4 w3-half w3-round">
+                <header class="w3-container w3-theme w3-left-align w3-round">
                     <h1>Login</h1>
                 </header>
 {#                <div class="w3-container w3-left-align">#}
                     <form class="w3-container w3-left-align w3-margin-top" action="{% url 'letters:login' %}" method="post">
                         {% csrf_token %}
                         <label class="w3-margin-top">Nutzername</label>
-                        <input class="w3-input w3-margin-bottom" type="text" name="username" id="username">
+                        <input class="w3-input w3-margin-bottom w3-border w3-round" type="text" name="username" id="username">
 
                         <label>Passwort</label>
-                        <input class="w3-input w3-margin-bottom" type="password" name="password" id="password">
+                        <input class="w3-input w3-margin-bottom w3-border w3-round" type="password" name="password" id="password">
 
-                        <button class="w3-btn w3-theme-d2 w3-margin-bottom" type="submit">Absenden</button>
+                        <button class="w3-btn w3-theme-d2 w3-margin-bottom w3-round" type="submit">Absenden</button>
                     </form>
 {#                </div>#}
             </div>
