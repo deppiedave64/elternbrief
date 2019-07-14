@@ -14,7 +14,12 @@
         <div class="w3-content w3-center">
             <p>Sie sehen die Startseite.</p>
 
-            {% if request.user.is_authenticated %}
+            {% if request.user.is_staff %}
+                <p>Sie sind eingeloggt als Nutzer {{ request.user.username }}.</p>
+                <p><b>Sie besitzen Mitarbeiterrechte!</b></p>
+                <p><b>Öffnen Sie die Übersicht, um die Elternbriefe zu sehen, die sie erstellt haben.</b></p>
+                <p><a href="{% url 'admin:index' %}">Hier</a> gelangen Sie zur Administrationsoberfläche.</p>
+            {% elif request.user.is_authenticated %}
                 <p>Sie sind eingeloggt als Nutzer {{ request.user.username }}.</p>
                 <p>Öffnen Sie die Übersicht, um neue Elternbriefe anzuzeigen.</p>
             {% else %}
