@@ -61,6 +61,21 @@ class Letter(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def students(self):
+        return set(
+            list(Student.objects.filter(class_group__in=self.classes_concerned.all())) +
+            list(Student.objects.filter(groups__in=self.groups_concerned.all()))
+        )
+
+    @property
+    def students_confirmed(self):
+        return set(self.students_acknowledged.all())
+
+    @property
+    def students_not_confirmed(self):
+        return self.students - self.students_confirmed
+
 
 class ResponseTextField(models.Model):
     """A simple text field for the response to a letter."""
@@ -149,6 +164,26 @@ class Response(models.Model):
         self.content = json.dumps(response_content)
         self.save()
         return True
+
+    def as_dict(self):
+        try:
+            response_content = json.loads(self.content)
+        except json.JSONDecodeError:
+            return "Response content broken. Please contact admin."
+
+        data = {
+            'last_name': self.student.last_name,
+            'first_name': self.student.first_name,
+            'class_grp': self.student.class_group,
+            'confirmed': "Ja"
+        }
+
+        for field in self.letter.responseboolfield_set.all():
+            data.update({field.name: "Ja" if response_content[field.name] else "Nein"})
+        for field in self.letter.responseselectionfield_set.all():
+            data.update({field.name: response_content[field.name]})
+
+        return data
 
     def __str__(self):
         return str(self.student) + ", " + str(self.letter)

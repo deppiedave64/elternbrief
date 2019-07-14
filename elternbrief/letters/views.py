@@ -2,9 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
 from django.contrib import messages
 
+from django_tables2 import RequestConfig, Column
+
 import json
 
 from .models import Letter, Student, Response
+from .tables import LetterResultTable
 
 
 def index(request):
@@ -67,7 +70,6 @@ def letter_detail(request, student_id, letter_id, confirmation=False):
         messages.success(request, "Brief wurde erfolgreich bestätigt!")
         return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
 
-
     if letter in student.letters:
         # Check whether there is already a response for this student and this letter:
         try:
@@ -88,6 +90,29 @@ def letter_detail(request, student_id, letter_id, confirmation=False):
                        "Der angegebene Brief betrifft nicht den angegebenen Schüler. Bitte überprüfen Sie ihre Anfrage. "
                        "Wenn Sie denkenm, dass dies nicht passieren sollte, wenden Sie sich bitte an einen Administrator.")
         return redirect('letters:letters')
+
+
+def letter_result(request, letter_id):
+    letter = get_object_or_404(Letter, pk=letter_id)
+
+    data = [r.as_dict() for r in Response.objects.filter(letter__pk=letter_id)] + [
+        {
+            'last_name': s.last_name,
+            'first_name': s.first_name,
+            'class_grp': s.class_group,
+            'confirmed': "Nein"
+        }
+        for s in letter.students_not_confirmed
+    ]
+
+    extra_columns = [(field.name, Column(verbose_name=field.description)) for field in
+                     letter.responseboolfield_set.all()] + \
+                    [(field.name, Column(verbose_name=field.description)) for field in
+                     letter.responseselectionfield_set.all()]
+    table = LetterResultTable(data, extra_columns=extra_columns)
+
+    RequestConfig(request).configure(table)
+    return render(request, 'letters/letter_result.html', {'table': table})
 
 
 def login(request):
