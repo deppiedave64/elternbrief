@@ -48,7 +48,12 @@ class ResponseSelectionFieldInline(admin.StackedInline):
 
 @admin.register(Letter)
 class LetterAdmin(admin.ModelAdmin):
-    inlines = (ResponseTextFieldInline, ResponseBoolFieldInline, ResponseSelectionFieldInline)
+    inlines = (ResponseBoolFieldInline, ResponseSelectionFieldInline)
+
+    def save_model(self, request, obj, form, change):
+        if not obj.created_by:
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
 
 
 admin.site.register(Group)

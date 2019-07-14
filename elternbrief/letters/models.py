@@ -56,6 +56,7 @@ class Letter(models.Model):
     classes_concerned = models.ManyToManyField(ClassGroup, blank=True)
     document = models.FileField(upload_to='documents/%Y/%m/%d/')
     students_acknowledged = models.ManyToManyField(Student, through='Response')
+    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, editable=False)
 
     def __str__(self):
         return self.name
