@@ -19,8 +19,16 @@ def index(request):
 def letters(request):
     """Index of the letters section."""
 
+    # Show special page if user is staff member:
+    if request.user.is_staff:
+        letters = Letter.objects.filter(created_by=request.user)
+        context = {
+            'letters': letters
+        }
+        return render(request, 'letters/letters_index_staff.html', context)
+
     # Only show page if user is logged in:
-    if request.user.is_authenticated:
+    elif request.user.is_authenticated:
         # Make sure that the User has an associated Profile object:
         if hasattr(request.user, 'profile'):
             # Retrieve list of all students the user is allowed to view letters for:
