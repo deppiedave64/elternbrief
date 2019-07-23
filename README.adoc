@@ -7,7 +7,7 @@
 :caution-caption: :fire:
 :warning-caption: :warning:
 
-image:logo/horizontal.png[Elternbrief, width=100px]
+image:logo/horizontal.png[Elternbrief,width=80%]
 
 Elternbrief is a web application built using https://djangoproject.com[Django]. 
 This repository contains a complete Django project ready to be tested on any system that supports running Python applications.
