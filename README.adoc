@@ -26,19 +26,31 @@ Also, we will start with extensive testing with real users at some point soon in
 
 === Requirements
 * Python 3.5 or higher
-* Some WSGI-capable web server (e.g. NGINX or Apache)
+* Some WSGI-capable web server (e.g. NGINX or Apache), or use Django's included webserver for testing
 * Python packages:
-    ** +django+ 2.2.3 or higher
-    ** +django-tables2+ 2.1.0 or higher
-    ** +mysqlclient+ 1.4.2 or higher
-    ** +pytz+ 2019.1 or higher
-    ** +sqlparse+ 0.3.0 or higher
+    ** `django` 2.2.3 or higher
+    ** `django-tables2` 2.1.0 or higher
+    ** `mysqlclient` 1.4.2 or higher
+    ** `pytz` 2019.1 or higher
+    ** `sqlparse` 0.3.0 or higher
 
 NOTE: The versions of the packages listed here are just a reference of which versions I have tested and that definetely work. 
 The project might also work with older versions of these packages perfectly fine.
 However, I always recommend using the latest version of every component as a best-practice.
 
-NOTE: You can automatically install all required python packages by running
+[NOTE]
+====
+You can automatically install all required python packages by running
 ----
 pip install -r requirements.txt
 ----
+====
+
+=== Licensing
+Elternbrief is available under the https://opensource.org/licenses/MIT[MIT license].
+This project also includes code that belongs to the Django project, which is not owned by me and is distributed under its own license.
+For more information, see the `LICENSE`-file.
+
+=== Contributing
+I am still in the process of cleaning up and documenting the code.
+However, if you are interested in the project and want to contribute, if you want to use it yourself and need help getting started, or if you have any other question, do not hesitate to contact me. :)
