@@ -1,0 +1,33 @@
+image::logo/horizontal.png[Elternbrief]
+
+=== What is Elternbrief?
+Elternbrief is a web application built using https://djangoproject.com[Django]. 
+This repository contains a complete Django project ready to be tested on any system that supports running Python applications.
+
+Originally started as a school project, Elternbrief aims to allow schools to digitally distribute letters to parents of students. 
+Parents are able to confirm these letters inside the application as well, reducing the waste of paper and also allowing said letters to be managed in a central way, relieving teachers from having to chase after forgetful students.
+
+=== What is the current state of the project?
+Elternbrief is still in a very early stage. Most key features are implemented in a basic way but are far from being complete. 
+Currently the interface presents an adventurous mix of text in German and English language, and there are quite probably more than a few bugs hidden throughout the code. 
+Fixing the interface and getting the most essential features done will be my task during the coming months. 
+Also, we will start with extensive testing with real users at some point soon in order to uncover other problems.
+
+=== Requirements
+* Python 3.5 or higher
+* Some WSGI-capable web server (e.g. NGINX or Apache)
+* Python packages:
+    ** +django+ 2.2.3 or higher
+    ** +django-tables2+ 2.1.0 or higher
+    ** +mysqlclient+ 1.4.2 or higher
+    ** +pytz+ 2019.1 or higher
+    ** +sqlparse+ 0.3.0 or higher
+
+NOTE: The versions of the packages listed here are just a reference of which versions I have tested and that definetely work. 
+The project might also work with older versions of these packages perfectly fine.
+However, I always recommend using the latest version of every component as a best-practice.
+
+NOTE: You can automatically install all required python packages by running
+----
+pip install -r requirements.txt
+----
