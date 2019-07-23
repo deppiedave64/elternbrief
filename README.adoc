@@ -1,4 +1,15 @@
+:toc:
+:toc-placement!:
+
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+
 image::logo/horizontal.png[Elternbrief]
+
+toc::[]
 
 === What is Elternbrief?
 Elternbrief is a web application built using https://djangoproject.com[Django]. 
@@ -23,7 +34,7 @@ Also, we will start with extensive testing with real users at some point soon in
     ** +pytz+ 2019.1 or higher
     ** +sqlparse+ 0.3.0 or higher
 
-TIP: The versions of the packages listed here are just a reference of which versions I have tested and that definetely work. 
+NOTE: The versions of the packages listed here are just a reference of which versions I have tested and that definetely work. 
 The project might also work with older versions of these packages perfectly fine.
 However, I always recommend using the latest version of every component as a best-practice.
 
