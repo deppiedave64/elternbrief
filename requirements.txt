@@ -1,2 +1,5 @@
-Django>=2.1.5
-pytz>=2018.7
+Django>=2.2.3
+django-tables2>=2.1.0
+mysqlclient>=1.4.2.post1
+pytz>=2019.1
+sqlparse>=0.3.0
