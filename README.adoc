@@ -7,14 +7,14 @@
 :caution-caption: :fire:
 :warning-caption: :warning:
 
-image::logo/horizontal.png[Elternbrief]
+image:logo/horizontal.png[Elternbrief, width=100px]
+
+Elternbrief is a web application built using https://djangoproject.com[Django]. 
+This repository contains a complete Django project ready to be tested on any system that supports running Python applications.
 
 toc::[]
 
 === What is Elternbrief?
-Elternbrief is a web application built using https://djangoproject.com[Django]. 
-This repository contains a complete Django project ready to be tested on any system that supports running Python applications.
-
 Originally started as a school project, Elternbrief aims to allow schools to digitally distribute letters to parents of students. 
 Parents are able to confirm these letters inside the application as well, reducing the waste of paper and also allowing said letters to be managed in a central way, relieving teachers from having to chase after forgetful students.
 
