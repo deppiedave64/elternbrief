@@ -75,10 +75,11 @@ WSGI_APPLICATION = 'elternbrief.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+# Preconfigured for MySQL.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': 'server',
+        'HOST': 'server', # Does not work if host is inside my.cnf
         'OPTIONS': {
             'read_default_file': os.path.join(BASE_DIR, 'my.cnf'),
         }
