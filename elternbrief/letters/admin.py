@@ -48,6 +48,8 @@ class ResponseSelectionFieldInline(admin.StackedInline):
 
 @admin.register(Letter)
 class LetterAdmin(admin.ModelAdmin):
+    """Custom admin interface for Letter model.
+    Allows user to add ResponseBoolFields as well as ResponseSelectionFields."""
     inlines = (ResponseBoolFieldInline, ResponseSelectionFieldInline)
 
     def save_model(self, request, obj, form, change):
@@ -58,5 +60,4 @@ class LetterAdmin(admin.ModelAdmin):
 
 admin.site.register(Group)
 admin.site.register(ClassGroup)
-# admin.site.register(Letter)
 admin.site.register(Student)
