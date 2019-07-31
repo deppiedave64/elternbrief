@@ -8,6 +8,7 @@
         {# Just an empty placeholder container to make the content stay centered. #}
         <div class="w3-col l3 m2 w3-hide-small"><p></p></div>
 
+        {# Actual content: #}
         <div class="w3-col l6 m8 s12">
             <p>Sie betrachten diesen Brief gerade für den Schüler <b>{{ student }}.</b></p>
             {% if response and letter.confirmation %}
@@ -22,6 +23,7 @@
                 <header class="w3-container w3-theme-d2 w3-left-align w3-round">
                     <h1>{{ letter }}</h1>
                 </header>
+
                 <div class="w3-container w3-left-align">
                     <p><b>Veröffentlichungsdatum:</b> {{ letter.date_published }}</p>
                 </div>
@@ -69,7 +71,8 @@
                         {% endfor %}
 
                         {% for field in selection_fields %}
-                            <p class="w3-margin-top">{{ field.description }}: <i class="fa fa-asterisk w3-tiny" style="color: red"></i></p>
+                            <p class="w3-margin-top">{{ field.description }}: <i class="fa fa-asterisk w3-tiny"
+                                                                                 style="color: red"></i></p>
                             <select class="w3-select w3-round" name="{{ field.name }}" id="{{ field.name }}">
                                 <option value="" disabled selected>Bitte auswählen:</option>
                                 {% for option in field.options_list %}
@@ -78,13 +81,15 @@
                             </select>
                         {% endfor %}
 
-                        <p class="w3-margin"><i class="fa fa-asterisk w3-small" style="color: red"></i> Markiert Pflichtfelder.</p>
+                        <p class="w3-margin"><i class="fa fa-asterisk w3-small" style="color: red"></i> Markiert
+                            Pflichtfelder.</p>
 
                         <button class="w3-btn w3-theme-d2 w3-margin" type="submit"><i class="fa fa-check"></i>
                             Bestätigen
                         </button>
                     </form>
                 {% endif %}
+
             </div>
         </div>
 
