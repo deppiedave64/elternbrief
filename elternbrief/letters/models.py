@@ -99,6 +99,9 @@ class ResponseBoolField(models.Model):
     def name(self):
         return f"boolfield-{self.id}"
 
+    def __str__(self):
+        return self.name
+
 
 class ResponseSelectionField(models.Model):
     """A simple selection field for the response to a letter."""
@@ -114,6 +117,9 @@ class ResponseSelectionField(models.Model):
     def options_list(self):
         return [i.strip() for i in self.options.split(",")]
 
+    def __str__(self):
+        self.name
+
 
 class Profile(models.Model):
     """Model that extends the attributes of the user model."""
@@ -122,6 +128,9 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # All the students a user is allowed to view letters for:
     children = models.ManyToManyField(Student, verbose_name="Kinder", blank=True)
+
+    def __str__(self):
+        return f"Profile of {self.user.username}"
 
 
 @receiver(post_save, sender=User)
