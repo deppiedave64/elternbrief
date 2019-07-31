@@ -1,11 +1,10 @@
-import django
-from django.test import TestCase
-from django.test import Client
+import datetime
 from unittest.mock import MagicMock
 
+import django
+from django.test import TestCase, Client
 from django.utils import timezone
 from django.contrib.auth.models import User
-import datetime
 
 from .models import Student, Letter, ClassGroup, Group
 
