@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
-from django.contrib import messages
-
-from django_tables2 import RequestConfig, Column
-
 import json
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
+from django_tables2 import RequestConfig, Column
 
 from .models import Letter, Student, Response
 from .tables import LetterResultTable
