@@ -6,7 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Elternbrief - {% block title %}Startseite{% endblock %}</title>
+
     <link rel="icon" type="image/svg+xml" href="{% static 'letters/icon.svg' %}" sizes="any"/>
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'letters/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'letters/favicon-16x16.png' %}">
@@ -69,11 +71,13 @@
             margin-top: 50px;
         }
 
+        {# Do not show underline effect when hovering over links#}
         a:hover {
             text-decoration: none;
         }
     </style>
 
+    {# Block for extra head code that only some pages need, e.g. JS #}
     {% block head_extra %}
     {% endblock %}
 </head>
@@ -103,7 +107,7 @@
                 </a>
             {% endif %}
 
-            {# Letters #}
+            {# Letters index #}
             {% if '/letters/' in request.path %}
                 <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button w3-theme-l1 w3-hover-white">Elternbriefe</a>
             {% else %}
