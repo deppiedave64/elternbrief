@@ -36,9 +36,9 @@ def letters(request):
 
     # Show special page if user is staff member:
     if request.user.is_staff:
-        letters = Letter.objects.filter(created_by=request.user)
+        letters_list = Letter.objects.filter(created_by=request.user)
         context = {
-            'letters': letters
+            'letters': letters_list
         }
 
         return render(request, 'letters/letters_index_staff.html', context)
