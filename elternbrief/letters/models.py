@@ -336,28 +336,6 @@ class Response(models.Model):
     # Values submitted by parents, encoded as JSON:
     content = models.TextField(default='{}')
 
-    def get_field_value(self, name):
-        """Return the value of a field by its name."""
-        try:
-            response_content = json.loads(self.content)
-        except json.JSONDecodeError:
-            return "Response content broken. Please contact admin."
-        try:
-            return response_content[id]
-        except KeyError:
-            return "N/A"
-
-    def set_field_values(self, values: dict):
-        """Set the values of the fields of the response."""
-        try:
-            response_content = json.loads(self.content)
-        except json.JSONDecodeError:
-            return "Response content broken. Please contact admin."
-        response_content.update(values)
-        self.content = json.dumps(response_content)
-        self.save()
-        return True
-
     def as_dict(self):
         """Return a dictionary containing this responses content.
 
