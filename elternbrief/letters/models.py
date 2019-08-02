@@ -389,7 +389,8 @@ class Response(models.Model):
         }
 
         for field in self.letter.responseboolfield_set.all():
-            data.update({field.name: "Ja" if response_content[field.name] else "Nein"})
+            data.update(
+                {field.name: "Ja" if response_content[field.name] else "Nein"})
         for field in self.letter.responseselectionfield_set.all():
             data.update({field.name: response_content[field.name]})
 
