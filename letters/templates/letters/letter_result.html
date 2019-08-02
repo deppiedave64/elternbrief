@@ -1,0 +1,17 @@
+{% extends 'letters/base.html' %}
+
+{% load static %}
+{% load render_table from django_tables2 %}
+
+{% block title %}{{ letter }}Ergebnisse{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% endblock %}
+
+{% block content %}
+    <div class="w3-row-padding w3-padding-64 w3-container w3-center">
+        {% render_table table %}
+    </div>
+{% endblock %}

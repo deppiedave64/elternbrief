@@ -1,0 +1,175 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Elternbrief - {% block title %}Startseite{% endblock %}</title>
+
+    <link rel="icon" type="image/svg+xml" href="{% static 'letters/icon.svg' %}" sizes="any"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'letters/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'letters/favicon-16x16.png' %}">
+
+    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/lib/w3-theme-indigo.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        h1, h2, .w3-bar, button {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        {# CSS for changing a button's icon when hovering over it (e.g. in the navbar) #}
+        a img.hover {
+            display: none;
+        }
+
+        a img.default {
+            display: inherit;
+        }
+
+        a:hover img.hover {
+            display: inherit;
+        }
+
+        a:hover img.default {
+            display: none;
+        }
+
+        {# CSS for different notification boxes #}
+        div .error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        div .warning {
+            background-color: #ffeb3b;
+            color: black;
+        }
+
+        div .success {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        div .info {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        div .message {
+            position: fixed;
+            margin-top: 50px;
+        }
+
+        {# Do not show underline effect when hovering over links#}
+        a:hover {
+            text-decoration: none;
+        }
+    </style>
+
+    {# Block for extra head code that only some pages need, e.g. JS #}
+    {% block head_extra %}
+    {% endblock %}
+</head>
+
+<body>
+
+{# Just a simple navbar. Buttons have different colors if they link to the current page. #}
+{% block navbar %}
+    <div class="w3-top">
+        <div class="w3-bar w3-card w3-large w3-left-align w3-theme">
+
+            {# Start page #}
+            {% if request.path == '/' %}
+                <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button w3-theme-l1 w3-hover-theme">
+                    <img height="20px" style="margin-right: 8px"
+                         src="{% static 'letters/icon_white.svg' %}">Startseite
+                </a>
+            {% else %}
+                <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button w3-hover-white">
+                    {# Make the icon change when hovering over it: #}
+                    <span>
+                        <img height="20px" class="default" style="margin-right: 8px"
+                             src="{% static 'letters/icon_white.svg' %}">
+                        <img height="20px" class="hover" style="margin-right: 8px"
+                             src="{% static 'letters/icon.svg' %}">
+                    </span>Startseite
+                </a>
+            {% endif %}
+
+            {# Letters index #}
+            {% if '/letters/' in request.path %}
+                <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button w3-theme-l1 w3-hover-white">Elternbriefe</a>
+            {% else %}
+                <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button w3-hover-white">Elternbriefe</a>
+            {% endif %}
+
+            {# Login #}
+            {% block login %}
+                {% if request.user.is_authenticated %}
+                    {# If the user is logged in, show their username and a logout button in a dropdown menu #}
+                    <div class="w3-dropdown-hover w3-right">
+                        <button class="w3-button w3-hover-white" style="width:150px">
+                            <i class="fa fa-user"></i> {{ user.username }}
+                        </button>
+                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                            <a href="{% url 'letters:logout' %}" class="w3-bar-item w3-button w3-hover-white">
+                                <i class="fa fa-sign-out"></i> Ausloggen
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'letters:login' %}" class="w3-bar-item w3-button w3-right w3-hover-white">
+                        <i class="fa fa-user-circle"></i> Login
+                    </a>
+                {% endif %}
+            {% endblock %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{# Display floating notifications at the top of the page: #}
+{% block messages %}
+    {% if messages %}
+        <div class="w3-row w3-padding w3-container">
+            <div class="w3-center w3-content" style="margin-left: auto; margin-right: auto; width: 40%">
+                {% for message in messages %}
+                    <div class="w3-panel w3-card-4 w3-round message{% if message.tags %} {{ message.tags }}{% endif %}">
+                        <span onclick="this.parentElement.style.display='none'"
+                              class="w3-button w3-large w3-round w3-display-topright w3-hover-white">&times
+                        </span>
+                        <h3>
+                            {% if "error" in message.tags %}
+                                Fehler!
+                            {% elif "warning" in message.tags %}
+                                Warnung!
+                            {% elif "success" in message.tags %}
+                                Erfolg!
+                            {% else %}
+                                Hinweis
+                            {% endif %}
+                        </h3>
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

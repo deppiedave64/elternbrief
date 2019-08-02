@@ -1,0 +1,30 @@
+{% extends "letters/base.html" %}
+
+{% load static %}
+
+{% block title %}Startseite{% endblock %}
+
+{% block content %}
+    <header class="w3-container w3-theme w3-center" style="padding: 128px">
+        <img src="{% static 'letters/vertical_white.svg' %}">
+        <p class="w3-xlarge">Herzlich willkommen bei <i>Elternbrief!</i></p>
+    </header>
+
+    <div class="w3-row-padding w3-padding-64 w3-container">
+        <div class="w3-content w3-center">
+            <p>Sie sehen die Startseite.</p>
+
+            {% if request.user.is_staff %}
+                <p>Sie sind eingeloggt als Nutzer {{ request.user.username }}.</p>
+                <p><b>Sie besitzen Mitarbeiterrechte!</b></p>
+                <p><b>Öffnen Sie die Übersicht, um die Elternbriefe zu sehen, die sie erstellt haben.</b></p>
+                <p><a href="{% url 'admin:index' %}">Hier</a> gelangen Sie zur Administrationsoberfläche.</p>
+            {% elif request.user.is_authenticated %}
+                <p>Sie sind eingeloggt als Nutzer {{ request.user.username }}.</p>
+                <p>Öffnen Sie die Übersicht, um neue Elternbriefe anzuzeigen.</p>
+            {% else %}
+                <p>Sie sind momentan nicht eingeloggt. Bitte loggen Sie sich ein, um die Anwendung zu nutzen.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
