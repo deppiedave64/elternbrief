@@ -38,13 +38,16 @@ NOTE: The versions of the packages listed here are just a reference of which ver
 The project might also work with older versions of these packages perfectly fine.
 However, I always recommend using the latest version of every component as a best-practice.
 
-[NOTE]
+[TIP]
 ====
 You can automatically install all required python packages by running
 ----
 pip install -r requirements.txt
 ----
 ====
+
+=== Getting started
+The https://github.com/deppiedave64/elternbrief/wiki[Elternbrief Wiki] holds information about how to get Elternbrief running in different scenarios and will continue to be updated as the project progresses.
 
 === Licensing
 Elternbrief is available under the https://opensource.org/licenses/MIT[MIT license].
