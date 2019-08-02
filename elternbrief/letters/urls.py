@@ -21,7 +21,8 @@ urlpatterns = [
          name='letter_result')
 ]
 
-# Allow uploaded files to be served as static files. Should be changed when going into production.
+# Allow uploaded files to be served as static files while DEBUG is on.
+# In production, static files are served via the web server.
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)

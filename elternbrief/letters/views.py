@@ -51,7 +51,7 @@ def letters(request):
             children_list = request.user.profile.children.all()
             context = {
                 'children_list': children_list,
-                # Dictionary of ids of all children, associated with the letters that concern them:
+                # Dictionary of ids of all children and the letters that concern them:
                 'letters': {child.id: child.letters for child in children_list}
             }
 
@@ -129,7 +129,7 @@ def letter_detail(request, student_id: int, letter_id: int,
                         letter_id=letter_id)
 
     if letter in student.letters:
-        # Check whether there is already a response for this student and this letter:
+        # Check whether a response for this student and this letter:
         try:
             response = Response.objects.get(student__pk=student_id,
                                             letter__pk=letter_id)
@@ -138,6 +138,7 @@ def letter_detail(request, student_id: int, letter_id: int,
 
         context = {'student': student, 'letter': letter, 'response': response}
 
+        # If letter needs confirmation, add all response fields to context:
         if not response and letter.confirmation:
             context.update(
                 {"text_fields": list(letter.responsetextfield_set.all()),
