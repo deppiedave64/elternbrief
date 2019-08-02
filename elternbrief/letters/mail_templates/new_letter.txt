@@ -1,5 +1,0 @@
-Sehr geehrte Damen und Herren,
-
-für Ihren Sohn / Ihre Tochter [student] ist ein neuer Elternbrief verfügbar.
-Folgen Sie diesem Link, um ihn anzuzeigen:
-https://[domain]/[student_id]/[letter_id]
