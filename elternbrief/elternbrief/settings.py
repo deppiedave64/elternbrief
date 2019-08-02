@@ -130,3 +130,14 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload-files/')
 MEDIA_URL = '/upload-files/'
+
+# Email settings
+
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+EMAIL_SUBJECT_PREFIX = '[Elternbrief] '
+EMAIL_USE_LOCALTIME = True
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
