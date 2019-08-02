@@ -93,6 +93,16 @@ class Student(models.Model):
 
         return set(Letter.objects.filter(query))
 
+    @property
+    def parents(self):
+        """Return list of parents of this student.
+
+        :return: List of parents of this student
+        :rtype: list
+        """
+
+        return list(User.objects.filter(profile__children=self))
+
 
 class Letter(models.Model):
     """A letter sent to parents.
