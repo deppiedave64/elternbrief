@@ -1,3 +1,10 @@
+"""
+Tables definition for letters app of the elternbrief project.
+
+Contains class definitions for dynamically generating tables using
+the django_tables2 app.
+"""
+
 import django_tables2 as tables
 
 

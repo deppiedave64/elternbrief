@@ -1,3 +1,5 @@
+"""URL definitions for the letters app of the elternbrief project."""
+
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static

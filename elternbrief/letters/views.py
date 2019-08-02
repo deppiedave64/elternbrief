@@ -1,3 +1,5 @@
+"""View definitions for the letters app of the elternbrief project."""
+
 import json
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -10,13 +12,26 @@ from .tables import LetterResultTable
 
 
 def index(request):
-    """Simple homepage."""
+    """Render the start page.
+
+    :param request: Current request
+    :return: Start page
+    """
 
     return render(request, 'letters/index.html')
 
 
 def letters(request):
-    """Index of the letters section."""
+    """Render overview of available letters.
+
+    If user is  staff member, show all letters that user created.
+    If user i no staff member, show all letters concerning the children
+    of that user.
+    If user is not logged in, show error message and redirect to index.
+
+    :param request: Current request
+    :return: Letters overview page
+    """
 
     # Show special page if user is staff member:
     if request.user.is_staff:
@@ -51,10 +66,24 @@ def letters(request):
     return redirect('letters:index')
 
 
-def letter_detail(request, student_id, letter_id, confirmation=False):
-    """Shows detailed information about certain Letter object."""
+def letter_detail(request, student_id: int, letter_id: int,
+                  confirmation=False):
+    """Render detailed information about a certain letter.
 
-    # Raise 404 exception if a letter or a student with the given id does not exist.
+    Render all information about a letter to a user.
+    If necessary, allow the user to confirm the letter.
+
+    :param request: Current request
+    :param student_id: ID of student this letter is being viewed for
+    :type student_id: int
+    :param letter_id: ID of letter to be displayed
+    :type letter_id: int
+    :param confirmation: Whether or not to process confirmation form
+    :type confirmation: bool
+    :return: Detail page of letter
+    """
+
+    # Raise 404 exception if letter or student with the given ids do not exist.
     letter = get_object_or_404(Letter, pk=letter_id)
     student = get_object_or_404(Student, pk=student_id)
 
@@ -100,6 +129,17 @@ def letter_detail(request, student_id, letter_id, confirmation=False):
 
 
 def letter_result(request, letter_id):
+    """Render information about the responses to a letter.
+
+    Display table containing information on which students have confirmed
+    a letter and the contents of the corresponding responses.
+
+    :param request: Current request
+    :param letter_id: ID of letter to be displayed
+    :type letter_id: int
+    :return: Results page of that letter
+    """
+
     letter = get_object_or_404(Letter, pk=letter_id)
 
     data = [r.as_dict() for r in Response.objects.filter(letter__pk=letter_id)] + [
@@ -124,9 +164,9 @@ def letter_result(request, letter_id):
 
 def login(request):
     """Login page.
-    If the user has previously visited this page and entered credentials in the form,
-    they will be directed back here and the entered credentials will be in the POST arguments.
-    Then they will be logged in a redirected to the index.
+
+    :param request: Current request
+    :return: Login page or start page if login was successful
     """
 
     # Check whether user has already entered credentials:
@@ -152,6 +192,11 @@ def login(request):
 
 
 def logout(request):
-    """Logs out a user and redirects to the index."""
+    """Log out a user and redirect to the index.
+
+    :param request: Current request
+    :return: Start page
+    """
+
     dj_logout(request)
     return redirect('letters:index')

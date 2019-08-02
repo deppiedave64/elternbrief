@@ -1,3 +1,5 @@
+"""Tests for the letters app of the elternbrief project."""
+
 import datetime
 from unittest.mock import MagicMock
 

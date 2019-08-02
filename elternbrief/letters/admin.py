@@ -98,11 +98,14 @@ class LetterAdmin(admin.ModelAdmin):
     inlines = (ResponseBoolFieldInline, ResponseSelectionFieldInline)
 
     def save_model(self, request, obj, form, change):
-        """Method that is called when a Letter object is saved to the database.
+        """Save this model to the database.
 
         Set the object's created_by attribute to the current user, if it hasn't
         been set before (e.g. the objects was just created).
         Then call the default ModelAdmin's save_model method.
+
+        This method is called automatically when someone hits 'save' in the
+        admin interface.
         """
 
         if not obj.created_by:
