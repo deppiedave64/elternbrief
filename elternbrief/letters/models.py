@@ -86,10 +86,12 @@ class Student(models.Model):
         """
 
         time = timezone.now()
-        letter_list = \
-            list(Letter.objects.filter(classes_concerned__name=self.class_group, date_published__lte=time)) + \
-            list(Letter.objects.filter(groups_concerned__in=self.groups.all(), date_published__lte=time))
-        return letter_list
+        query = models.Q(date_published__lte=time) & (
+                models.Q(classes_concerned__name=self.class_group)
+                | models.Q(groups_concerned__in=self.groups.all())
+        )
+
+        return set(Letter.objects.filter(query))
 
 
 class Letter(models.Model):
