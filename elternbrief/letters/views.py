@@ -4,7 +4,8 @@ import json
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
+from django.contrib.auth import authenticate, login as dj_login, \
+    logout as dj_logout
 from django_tables2 import RequestConfig, Column
 
 from .models import Letter, Student, Response
@@ -39,6 +40,7 @@ def letters(request):
         context = {
             'letters': letters
         }
+
         return render(request, 'letters/letters_index_staff.html', context)
 
     # Only show page if user is logged in:
@@ -52,16 +54,20 @@ def letters(request):
                 # Dictionary of ids of all children, associated with the letters that concern them:
                 'letters': {child.id: child.letters for child in children_list}
             }
+
             return render(request, 'letters/letters_index.html', context)
+
         else:
             # Show error message if the User has now associated Profile object:
-            messages.error(request, "Sie sind mit einem Nutzer eingeloggt, der nicht vollständig registriert ist!")
-
+            messages.error(request,
+                           "Sie sind mit einem Nutzer eingeloggt, \
+                           der nicht vollständig registriert ist!")
 
     # Redirect anonymous users to index and show an error message:
     else:
         messages.error(request,
-                       "Sie sind momentan nicht eingeloggt. Bitte loggen Sie sich ein, um ihre Übersicht anzuzeigen.")
+                       "Sie sind momentan nicht eingeloggt. Bitte \
+                       loggen Sie sich ein, um ihre Übersicht anzuzeigen.")
 
     return redirect('letters:index')
 
@@ -89,42 +95,63 @@ def letter_detail(request, student_id: int, letter_id: int,
 
     # Process letter confirmation:
     if confirmation:
-        if Response.objects.filter(student__id=student_id, letter__id=letter_id):
-            messages.error(request, "Für diesen Brief und diesen Schüler liegt bereits eine Bestätigung vor.")
-            return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
+        # Don't allow confirmation if there is already a response:
+        if Response.objects.filter(student__id=student_id,
+                                   letter__id=letter_id):
+            messages.error(request,
+                           "Für diesen Brief und diesen Schüler \
+                           liegt bereits eine Bestätigung vor.")
 
+            return redirect('letters:letter_detail', student_id=student_id,
+                            letter_id=letter_id)
+
+        # Don't allow confirmation if letter doesn't require it:
         if not Letter.objects.get(id=letter_id).confirmation:
-            messages.error(request, "Dieser Brief muss nicht bestätigt werden!")
-            return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
+            messages.error(request,
+                           "Dieser Brief muss nicht bestätigt werden!")
 
-        fields = {key: request.POST[key] for key in request.POST.keys() if "field-" in key}
-        fields.update({f"boolfield-{field.id}": False for field in list(letter.responseboolfield_set.all())})
+            return redirect('letters:letter_detail', student_id=student_id,
+                            letter_id=letter_id)
+
+        fields = {f"boolfield-{field.id}": False for field in
+                  list(letter.responseboolfield_set.all())}
+        fields.update({key: request.POST[key] for key in request.POST.keys() if
+                       "field-" in key})
         response_content = json.dumps(fields)
 
         Response.objects.create(letter=Letter.objects.get(id=letter_id),
-                                student=Student.objects.get(id=student_id), content=response_content).save()
+                                student=Student.objects.get(id=student_id),
+                                content=response_content).save()
+
         messages.success(request, "Brief wurde erfolgreich bestätigt!")
-        return redirect('letters:letter_detail', student_id=student_id, letter_id=letter_id)
+
+        return redirect('letters:letter_detail', student_id=student_id,
+                        letter_id=letter_id)
 
     if letter in student.letters:
         # Check whether there is already a response for this student and this letter:
         try:
-            response = Response.objects.get(student__pk=student_id, letter__pk=letter_id)
+            response = Response.objects.get(student__pk=student_id,
+                                            letter__pk=letter_id)
         except Response.DoesNotExist:
             response = None
 
         context = {'student': student, 'letter': letter, 'response': response}
 
         if not response and letter.confirmation:
-            context.update({"text_fields": list(letter.responsetextfield_set.all()),
-                            "bool_fields": list(letter.responseboolfield_set.all()),
-                            "selection_fields": list(letter.responseselectionfield_set.all())})
+            context.update(
+                {"text_fields": list(letter.responsetextfield_set.all()),
+                 "bool_fields": list(letter.responseboolfield_set.all()),
+                 "selection_fields": list(
+                     letter.responseselectionfield_set.all())})
 
         return render(request, 'letters/letter_detail.html', context)
+
     else:
         messages.error(request,
                        "Der angegebene Brief betrifft nicht den angegebenen Schüler. Bitte überprüfen Sie ihre Anfrage. "
-                       "Wenn Sie denkenm, dass dies nicht passieren sollte, wenden Sie sich bitte an einen Administrator.")
+                       "Wenn Sie denken, dass dies nicht passieren sollte, wenden Sie sich bitte an einen Administrator.")
+
         return redirect('letters:letters')
 
 
@@ -142,23 +169,27 @@ def letter_result(request, letter_id):
 
     letter = get_object_or_404(Letter, pk=letter_id)
 
-    data = [r.as_dict() for r in Response.objects.filter(letter__pk=letter_id)] + [
-        {
-            'last_name': s.last_name,
-            'first_name': s.first_name,
-            'class_grp': s.class_group,
-            'confirmed': "Nein"
-        }
-        for s in letter.students_not_confirmed
-    ]
+    data = [r.as_dict() for r in
+            Response.objects.filter(letter__pk=letter_id)] + [
+               {
+                   'last_name': s.last_name,
+                   'first_name': s.first_name,
+                   'class_grp': s.class_group,
+                   'confirmed': "Nein"
+               }
+               for s in letter.students_not_confirmed
+           ]
 
-    extra_columns = [(field.name, Column(verbose_name=field.description)) for field in
+    extra_columns = [(field.name, Column(verbose_name=field.description)) for
+                     field in
                      letter.responseboolfield_set.all()] + \
-                    [(field.name, Column(verbose_name=field.description)) for field in
+                    [(field.name, Column(verbose_name=field.description)) for
+                     field in
                      letter.responseselectionfield_set.all()]
     table = LetterResultTable(data, extra_columns=extra_columns)
 
     RequestConfig(request).configure(table)
+
     return render(request, 'letters/letter_result.html', {'table': table})
 
 
@@ -180,10 +211,13 @@ def login(request):
         if user is not None:
             # If credentials are corrected login user and redirect to index:
             dj_login(request, user)
+
             return redirect('letters:index')
+
         else:
             # If credentials are wrong, redirect to this page and show an error message:
-            messages.error(request, "Nutzername oder Passwort sind falsch. Bitte versuchen Sie es erneut.")
+            messages.error(request,
+                           "Nutzername oder Passwort sind falsch. Bitte versuchen Sie es erneut.")
             return render(request, 'letters/login.html')
 
     # If the user has not already entered any credentials, just show the login page:

@@ -20,5 +20,6 @@ class LetterResultTable(tables.Table):
             'class': 'w3-table-all'
         }
         row_attrs = {
-            'class': lambda record: 'w3-hover-indigo' if record['confirmed'] == "Ja" else 'w3-pale-red w3-hover-red'
+            'class': lambda record: 'w3-hover-indigo'
+            if record['confirmed'] == "Ja" else 'w3-pale-red w3-hover-red'
         }

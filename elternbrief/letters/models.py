@@ -57,7 +57,8 @@ class Student(models.Model):
 
     first_name = models.CharField("Vorname", max_length=30)
     last_name = models.CharField("Nachname", max_length=30)
-    class_group = models.ForeignKey(ClassGroup, verbose_name="Klasse", on_delete=models.PROTECT)
+    class_group = models.ForeignKey(ClassGroup, verbose_name="Klasse",
+                                    on_delete=models.PROTECT)
     groups = models.ManyToManyField(Group, verbose_name="Gruppen", blank=True)
 
     def __str__(self):
@@ -104,13 +105,19 @@ class Letter(models.Model):
     date_published = models.DateField("Veröffentlichungsdatum",
                                       default=timezone.now)
     date_due = models.DateField("Fällig bis", blank=True, null=True)
-    teacher = models.CharField("Zuständige Lehrkraft", max_length=30, blank=True)
+    teacher = models.CharField("Zuständige Lehrkraft", max_length=30,
+                               blank=True)
     confirmation = models.BooleanField("Muss bestätigt werden", default=True)
-    groups_concerned = models.ManyToManyField(Group, blank=True)
-    classes_concerned = models.ManyToManyField(ClassGroup, blank=True)
-    document = models.FileField(upload_to='documents/%Y/%m/%d/')
+    groups_concerned = models.ManyToManyField(Group,
+                                              verbose_name="Betroffene Gruppen",
+                                              blank=True)
+    classes_concerned = models.ManyToManyField(ClassGroup,
+                                               verbose_name="Betroffene Klassen",
+                                               blank=True)
+    document = models.FileField("Dokument", upload_to='documents/%Y/%m/%d/')
     students_acknowledged = models.ManyToManyField(Student, through='Response')
-    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, editable=False)
+    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL,
+                                   editable=False)
 
     def __str__(self):
         """Return String representation of itself.
@@ -285,10 +292,8 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # All the students a user is allowed to view letters for:
-    children = models.ManyToManyField(Student, verbose_name="Kinder", blank=True)
-
-    def __str__(self):
-        return f"Profile of {self.user.username}"
+    children = models.ManyToManyField(Student, verbose_name="Kinder",
+                                      blank=True)
 
     @staticmethod
     @receiver(post_save, sender=User)
@@ -387,6 +392,3 @@ class Response(models.Model):
             data.update({field.name: response_content[field.name]})
 
         return data
-
-    def __str__(self):
-        return str(self.student) + ", " + str(self.letter)
