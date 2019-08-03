@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7nr5!b9xvk^xzouq#f^9zqc_2*-lzh&t2gqzra^-_ljz3=n(l4'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -133,6 +133,12 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload-files/')
 MEDIA_URL = '/upload-files/'
 
+# HTTPS
+# Uncomment these settings if you are using https
+
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+
 # Email settings
 
 EMAIL_HOST = ''
@@ -143,3 +149,5 @@ EMAIL_SUBJECT_PREFIX = '[Elternbrief] '
 EMAIL_USE_LOCALTIME = True
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = ''
+SERVER_EMAIL = ''
