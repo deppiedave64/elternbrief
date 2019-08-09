@@ -306,6 +306,8 @@ class Profile(models.Model):
     # All the students a user is allowed to view letters for:
     children = models.ManyToManyField(Student, verbose_name="Kinder",
                                       blank=True)
+    # ID used for mass importing users from csv:
+    import_id = models.IntegerField(blank=True, editable=False, null=True)
 
     @staticmethod
     @receiver(post_save, sender=User)
