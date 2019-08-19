@@ -61,6 +61,8 @@ class Student(models.Model):
                                     on_delete=models.PROTECT)
     groups = models.ManyToManyField(Group, verbose_name="Gruppen", blank=True)
 
+    # All letters concerning that student that have already been viewed once:
+
     def __str__(self):
         """Return string representation of itself.
 
@@ -127,9 +129,12 @@ class Letter(models.Model):
                                                verbose_name="Betroffene Klassen",
                                                blank=True)
     document = models.FileField("Dokument", upload_to='documents/%Y/%m/%d/')
-    students_acknowledged = models.ManyToManyField(Student, through='Response')
     created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL,
                                    editable=False)
+    students_viewed = models.ManyToManyField(Student, editable=False,
+                                             related_name="letters_viewed")
+    students_acknowledged = models.ManyToManyField(Student, through='Response',
+                                                   related_name="letters_acknowledged")
 
     def __str__(self):
         """Return String representation of itself.

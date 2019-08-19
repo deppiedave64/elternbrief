@@ -129,7 +129,11 @@ def letter_detail(request, student_id: int, letter_id: int,
                         letter_id=letter_id)
 
     if letter in student.letters:
-        # Check whether a response for this student and this letter:
+        # Make sure that the letter is marked as read:
+        if student not in letter.students_viewed.all():
+            letter.students_viewed.add(student)
+
+        # Check whether a response for this student and this letter exists:
         try:
             response = Response.objects.get(student__pk=student_id,
                                             letter__pk=letter_id)
