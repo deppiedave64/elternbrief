@@ -42,9 +42,18 @@ class UserAdmin(BaseUserAdmin):
 
     Extends the default UserAdmin class but adds the ParentInline in order to
     edit a user's Profile object in place.
+    The PartentInline is hidden when adding a new user, because that user does
+    not have a profile yet.
     """
 
     inlines = (ParentInline,)
+
+    # Only show ParentInline when editing an existing user:
+    def get_inline_instances(self, request, obj=None):
+        if obj:
+            return [ParentInline(self.model, self.admin_site)]
+        else:
+            return []
 
 
 class ResponseTextFieldInline(admin.StackedInline):
