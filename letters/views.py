@@ -89,9 +89,27 @@ def letter_detail(request, student_id: int, letter_id: int,
     :return: Detail page of letter
     """
 
-    # Raise 404 exception if letter or student with the given ids do not exist.
-    letter = get_object_or_404(Letter, pk=letter_id)
-    student = get_object_or_404(Student, pk=student_id)
+    # Make sure that user is logged in:
+    if request.user.is_authenticated:
+        # Raise 404 exception if letter or student with the given ids do not exist.
+        letter = get_object_or_404(Letter, pk=letter_id)
+        student = get_object_or_404(Student, pk=student_id)
+
+        # Make sure that user is parent of that student:
+        if not student in request.user.profile.children.all():
+            messages.error(request,
+                           "Für diesen Schüler dürfen Sie keine Briefe betrachten!")
+            return redirect('letters:letters')
+
+        # Make sure that this letter concerns that student:
+        if not letter in student.letters:
+            messages.error(request,
+                           "Dieser Brief betrifft nicht diesen Schüler.")
+            return redirect('letters:letters')
+    else:
+        messages.error(request,
+                       "Bitte loggen Sie sich ein, um den Brief zu betrachten!")
+        return redirect('letters:index')
 
     # Process letter confirmation:
     if confirmation:
@@ -128,36 +146,28 @@ def letter_detail(request, student_id: int, letter_id: int,
         return redirect('letters:letter_detail', student_id=student_id,
                         letter_id=letter_id)
 
-    if letter in student.letters:
-        # Make sure that the letter is marked as read:
-        if student not in letter.students_viewed.all():
-            letter.students_viewed.add(student)
+    # Make sure that the letter is marked as read:
+    if student not in letter.students_viewed.all():
+        letter.students_viewed.add(student)
 
-        # Check whether a response for this student and this letter exists:
-        try:
-            response = Response.objects.get(student__pk=student_id,
-                                            letter__pk=letter_id)
-        except Response.DoesNotExist:
-            response = None
+    # Check whether a response for this student and this letter exists:
+    try:
+        response = Response.objects.get(student__pk=student_id,
+                                        letter__pk=letter_id)
+    except Response.DoesNotExist:
+        response = None
 
-        context = {'student': student, 'letter': letter, 'response': response}
+    context = {'student': student, 'letter': letter, 'response': response}
 
-        # If letter needs confirmation, add all response fields to context:
-        if not response and letter.confirmation:
-            context.update(
-                {"text_fields": list(letter.responsetextfield_set.all()),
-                 "bool_fields": list(letter.responseboolfield_set.all()),
-                 "selection_fields": list(
-                     letter.responseselectionfield_set.all())})
+    # If letter needs confirmation, add all response fields to context:
+    if not response and letter.confirmation:
+        context.update(
+            {"text_fields": list(letter.responsetextfield_set.all()),
+             "bool_fields": list(letter.responseboolfield_set.all()),
+             "selection_fields": list(
+                 letter.responseselectionfield_set.all())})
 
-        return render(request, 'letters/letter_detail.html', context)
-
-    else:
-        messages.error(request,
-                       "Der angegebene Brief betrifft nicht den angegebenen Schüler. Bitte überprüfen Sie ihre Anfrage. "
-                       "Wenn Sie denken, dass dies nicht passieren sollte, wenden Sie sich bitte an einen Administrator.")
-
-        return redirect('letters:letters')
+    return render(request, 'letters/letter_detail.html', context)
 
 
 def letter_result(request, letter_id):
