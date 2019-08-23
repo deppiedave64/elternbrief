@@ -7,6 +7,8 @@
 :caution-caption: :fire:
 :warning-caption: :warning:
 
+image:https://bettercodehub.com/edge/badge/deppiedave64/elternbrief?branch=master[BCH Compliance]
+
 image:logo/horizontal.png[Elternbrief,width=80%]
 
 Elternbrief is a web application built using https://djangoproject.com[Django]. 
