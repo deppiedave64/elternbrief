@@ -18,7 +18,7 @@ class Group(models.Model):
     Each student can be a member of any number of groups.
     """
 
-    name = models.CharField("Name", max_length=30)
+    name = models.CharField("Name", max_length=30, unique=True)
 
     def __str__(self):
         """Return a string representation of itself.
@@ -38,7 +38,7 @@ class ClassGroup(models.Model):
     Each student must be a member of exactly one school class.
     """
 
-    name = models.CharField("Name", max_length=30)
+    name = models.CharField("Name", max_length=30, unique=True)
 
     def __str__(self):
         """Return string representation of itself.
