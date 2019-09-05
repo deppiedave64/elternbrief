@@ -20,6 +20,10 @@ class Group(models.Model):
 
     name = models.CharField("Name", max_length=30, unique=True)
 
+    class Meta:
+        verbose_name = "Gruppe"
+        verbose_name_plural = "Gruppen"
+
     def __str__(self):
         """Return a string representation of itself.
 
@@ -39,6 +43,10 @@ class ClassGroup(models.Model):
     """
 
     name = models.CharField("Name", max_length=30, unique=True)
+
+    class Meta:
+        verbose_name = "Klasse"
+        verbose_name_plural = "Klassen"
 
     def __str__(self):
         """Return string representation of itself.
@@ -61,7 +69,9 @@ class Student(models.Model):
                                     on_delete=models.PROTECT)
     groups = models.ManyToManyField(Group, verbose_name="Gruppen", blank=True)
 
-    # All letters concerning that student that have already been viewed once:
+    class Meta:
+        verbose_name = "Schüler"
+        verbose_name_plural = "Schüler"
 
     def __str__(self):
         """Return string representation of itself.
@@ -135,6 +145,10 @@ class Letter(models.Model):
                                              related_name="letters_viewed")
     students_acknowledged = models.ManyToManyField(Student, through='Response',
                                                    related_name="letters_acknowledged")
+
+    class Meta:
+        verbose_name = "Brief"
+        verbose_name_plural = "Briefe"
 
     def __str__(self):
         """Return String representation of itself.
@@ -233,6 +247,10 @@ class ResponseBoolField(models.Model):
     letter = models.ForeignKey(Letter, on_delete=models.CASCADE)
     must_be_true = models.BooleanField("Muss ausgewählt werden", default=False)
 
+    class Meta:
+        verbose_name = "Kontrollbox"
+        verbose_name_plural = "Kontrollboxen"
+
     @property
     def name(self):
         """Return unique name of this object.
@@ -262,6 +280,10 @@ class ResponseSelectionField(models.Model):
     description = models.CharField("Beschreibung", max_length=200)
     options = models.TextField("Auswahlmöglichkeiten (kommagetrennt)")
     letter = models.ForeignKey(Letter, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Auswahlfeld"
+        verbose_name_plural = "Auswahlfelder"
 
     @property
     def name(self):
@@ -313,6 +335,10 @@ class Profile(models.Model):
                                       blank=True)
     # ID used for mass importing users from csv:
     import_id = models.IntegerField(blank=True, editable=False, null=True)
+
+    class Meta:
+        verbose_name = "Profil"
+        verbose_name_plural = "Profile"
 
     @staticmethod
     @receiver(post_save, sender=User)
