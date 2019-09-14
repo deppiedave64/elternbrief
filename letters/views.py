@@ -4,6 +4,7 @@ import json
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login as dj_login, \
     logout as dj_logout
 from django_tables2 import RequestConfig, Column
@@ -170,11 +171,13 @@ def letter_detail(request, student_id: int, letter_id: int,
     return render(request, 'letters/letter_detail.html', context)
 
 
+@staff_member_required
 def letter_result(request, letter_id):
     """Render information about the responses to a letter.
 
     Display table containing information on which students have confirmed
     a letter and the contents of the corresponding responses.
+    May only be viewed by staff members.
 
     :param request: Current request
     :param letter_id: ID of letter to be displayed
