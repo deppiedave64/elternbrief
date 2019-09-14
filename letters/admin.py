@@ -11,7 +11,7 @@ It registers all necessary models to allow staff members to
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-
+from django.urls import reverse
 from .models import Group, ClassGroup, Letter, Student, Profile, \
     ResponseTextField, ResponseBoolField, \
     ResponseSelectionField
@@ -105,6 +105,28 @@ class LetterAdmin(admin.ModelAdmin):
     """
 
     inlines = (ResponseBoolFieldInline, ResponseSelectionFieldInline)
+    fieldsets = [
+        (None, {'fields': ['name', 'confirmation', 'teacher', 'document']}),
+        ('Datumsinformationen', {'fields': ['date_published', 'date_due']}),
+        ('Betroffene Schüler',
+         {'fields': ['groups_concerned', 'classes_concerned']})
+    ]
+
+    # Add date of publication and deadline to list view:
+    list_display = ('name', 'date_published', 'date_due')
+
+    # Add filters to list view:
+    list_filter = ('date_published', 'date_due', 'classes_concerned', 'groups_concerned')
+
+    def view_on_site(self, obj):
+        """View results of this letter.
+
+        Allow staff members to click 'view on site' to see the results of this
+        letter.
+        """
+
+        return reverse('letters:letter_result', kwargs={'letter_id': obj.id})
+
 
     def save_model(self, request, obj, form, change):
         """Save this model to the database.
@@ -122,7 +144,22 @@ class LetterAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    """Custom admin interface for Student model."""
+
+    # Add class group and names to list view as separate fields:
+    list_display = ('class_group', 'last_name', 'first_name')
+    list_display_links = ('first_name', 'last_name')
+
+    # Add filters to list view:
+    list_filter = ('class_group', 'groups')
+
+
 # Register models with the default ModelAdmin:
 admin.site.register(Group)
 admin.site.register(ClassGroup)
-admin.site.register(Student)
+
+# Change site name:
+admin.site.site_header = "Elternbrief Verwaltung"
+admin.site.site_title = "Elternbrief Verwaltung"

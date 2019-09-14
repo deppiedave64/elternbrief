@@ -10,3 +10,4 @@ class LettersConfig(AppConfig):
     """
 
     name = 'letters'
+    verbose_name = "Elternbriefe"
