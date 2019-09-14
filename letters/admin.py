@@ -2,10 +2,10 @@
 Admin settings for the letters app of the elternbrief project.
 
 It registers all necessary models to allow staff members to
-1. create and edit letters,
-2. Create and edit users,
-3. Create and edit student's profiles,
-4. Create and edit groups that students can be assigned to.
+- create and edit letters,
+- Create and edit users,
+- Create and edit student's profiles,
+- Create and edit groups that students can be assigned to.
 """
 
 from django.contrib import admin
