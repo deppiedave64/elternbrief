@@ -3,6 +3,10 @@
 
 {% block title %}{{ letter }}{% endblock %}
 
+{% block head_extra %}
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.1.266/build/pdf.min.js"></script>
+{% endblock %}
+
 {% block content %}
     <div class="w3-row-padding w3-padding-64 w3-container w3-center">
         {# Just an empty placeholder container to make the content stay centered. #}
@@ -45,9 +49,12 @@
                             class="fa fa-info-circle"></i></p>
                 </div>
 
-                <div class="w3-container" id="canvas">
-                    <embed src="{{ letter.document.url }}" type="application/pdf" width="100%" height="800px"/>
-                </div>
+{#                <div class="w3-container" id="canvas">#}
+{#                    <embed src="{{ letter.document.url }}" type="application/pdf" width="100%" height="800px"/>#}
+{#                </div>#}
+                <button class="w3-btn w3-theme-d2 w3-margin"><a class="pdf-link" href="{{ letter.document.url }}" target="_blank">Download</a></button>
+
+                <canvas class="pdf-canvas" width="100%" height="100%" style="border: 5px solid black"></canvas>
 
                 {# Section for responding to a letter: #}
                 {% if not response and letter.confirmation %}
@@ -97,4 +104,8 @@
         <div class="w3-col l3 m2 w3-hide-small"><p></p></div>
 
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'letters/view-pdf.js' %}"></script>
 {% endblock %}
