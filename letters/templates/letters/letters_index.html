@@ -6,31 +6,26 @@
 
 {% block content %}
 
-    <div class="w3-row-padding w3-padding-64 w3-container">
-        <div class="w3-content w3-center">
+    <section class="page-content">
             <p>Folgende Elternbriefe liegen vor:</p>
 
             {% for child in children_list %}
-                <div class="w3-card w3-margin w3-round">
+                <div class="child-card w3-card w3-margin w3-round">
                     <header class="w3-container w3-theme w3-round">
                         <h2>{{ child }}</h2>
                     </header>
-                    <div class="w3-container">
-                        {% with child_id=child.id %}
-                            {% for letter in letters|get_item:child_id %}
-                                <p>
-                                    <a href="{% url 'letters:letter_detail' child.pk letter.pk %}">
-                                        {% if not child in letter.students_viewed.all %}
-                                            <i class="fa fa-exclamation"
-                                               style="color: red"></i>{% endif %} {{ letter }}
-                                    </a></p>
-                            {% endfor %}
-                        {% endwith %}
-                    </div>
+                    {% with child_id=child.id %}
+                        {% for letter in letters|get_item:child_id %}
+                                <a href="{% url 'letters:letter_detail' child.pk letter.pk %}">
+                                    {% if not child in letter.students_viewed.all %}
+                                        <i class="fa fa-exclamation"
+                                           style="color: red"></i>{% endif %} {{ letter }}
+                                </a>
+                        {% endfor %}
+                    {% endwith %}
                 </div>
             {% endfor %}
 
-        </div>
-    </div>
+    </section>
 
 {% endblock %}
