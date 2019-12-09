@@ -27,7 +27,7 @@ Fixing the interface and getting the most essential features done will be my tas
 Also, we will start with extensive testing with real users at some point soon in order to uncover other problems.
 
 === Requirements
-* Python 3.5 or higher
+* Python 3.6 or higher
 * Some WSGI-capable web server (e.g. NGINX or Apache), or use Django's included webserver for testing
 * Python packages:
     ** `django` 2.2.3 or higher
