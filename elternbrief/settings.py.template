@@ -20,12 +20,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'd211p3l*5r0po*6(p-y(^0vy(@dnu&yq6_4%ri6-_*vyioj!=o'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Run in debug mode, unless DEBUG env variable is set to 0:
+DEBUG = os.environ.get("DEBUG", default=1)
 
-ALLOWED_HOSTS = []
+# Use HOSTNAME env variable for allowed host.
+# Otherwise use localhost. Only use testserver if running in debug mode:
+ALLOWED_HOSTS = os.environ.get("HOSTNAME", default=["localhost", "testserver"] if DEBUG else ["localhost"])
 
 
 # Application definition
@@ -75,14 +78,19 @@ WSGI_APPLICATION = 'elternbrief.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-# Preconfigured for MySQL.
+# If there is a my.cnf file present, use that for connecting to a MySQL server.
+# Otherwise use SQLite:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': 'server', # Does not work if host is inside my.cnf
         'OPTIONS': {
             'read_default_file': os.path.join(BASE_DIR, 'my.cnf'),
         }
+    }
+} if os.path.isfile(os.path.join(BASE_DIR, "my.cnf")) else {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
 
@@ -120,7 +128,7 @@ USE_L10N = True
 USE_TZ = True
 
 # Hostname setting
-HOSTNAME = ''
+HOSTNAME = os.environ.get("HOSTNAME", default="localhost")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
