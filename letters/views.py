@@ -219,28 +219,28 @@ def login(request):
     """
 
     # Check whether user has already entered credentials:
-    if 'username' in request.POST.keys() and 'password' in request.POST.keys():
+    if 'LoginFormUsername' in request.POST.keys() and 'LoginFormPassword' in request.POST.keys():
         # Retrieve credentials from POST arguments:
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST['LoginFormUsername']
+        password = request.POST['LoginFormPassword']
         # Check whether the credentials are correct:
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # If credentials are corrected login user and redirect to index:
+            # If credentials are correct login user and redirect to index:
             dj_login(request, user)
 
             return redirect('letters:index')
 
         else:
-            # If credentials are wrong, redirect to this page and show an error message:
+            # If credentials are wrong, redirect to index and show an error message:
             messages.error(request,
                            "Nutzername oder Passwort sind falsch. Bitte versuchen Sie es erneut.")
-            return render(request, 'letters/login.html')
+            return redirect('letters:index')
 
-    # If the user has not already entered any credentials, just show the login page:
+    # If the user has not already entered any credentials, redirect to the index:
     else:
-        return render(request, 'letters/login.html')
+        return redirect('letters:index')
 
 
 def logout(request):

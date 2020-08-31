@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>Elternbrief - {% block title %}Startseite{% endblock %}</title>
 
@@ -13,11 +13,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'letters/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'letters/favicon-16x16.png' %}">
 
-    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/lib/w3-theme-indigo.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat&display=swap">
-    <link rel="stylesheet" href="{% static 'letters/style.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'letters/custom.css' %}">
+
+    <script type="module" src="https://unpkg.com/ionicons@5.1.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@5.1.2/dist/ionicons/ionicons.js"></script>
 
     {# Block for extra head code that only some pages need #}
     {% block head_extra %}
@@ -26,93 +26,167 @@
 
 <body>
 
-{# Just a simple navbar. Buttons have different colors if they link to the current page. #}
+{# Simple Navbar #}
 {% block navbar %}
-    <div class="w3-top">
-        <div class="w3-bar w3-card w3-large w3-left-align w3-theme">
+    <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-primary shadow-lg">
+        {# Start page #}
+        {% if request.path == '/' %}
+            <a href="{% url 'letters:index' %}" class="navbar-brand">
+                <img class="align-text-top d-inline-block" height="20px" src="{% static 'letters/icon_white.svg' %}"
+                     alt="Elternbrief Logo">Startseite
+            </a>
+        {% else %}
+            <a href="{% url 'letters:index' %}" class="navbar-brand">
+                <img src="{% static 'letters/icon_white.svg' %}" alt="Elternbrief Logo" class="align-text-top default"
+                     height="20px">
+                <img src="{% static 'letters/icon.svg' %}" alt="Elternbrief Logo" class="align-text-top hover"
+                     height="20px">
+                Startseite
+            </a>
+        {% endif %}
 
-            {# Start page #}
-            {% if request.path == '/' %}
-                <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button w3-theme-l1 w3-hover-theme navbar-logo">
-                    <img height="20px" src="{% static 'letters/icon_white.svg' %}">Startseite
-                </a>
-            {% else %}
-                <a href="{% url 'letters:index' %}" class="w3-bar-item w3-button w3-hover-white navbar-logo">
-                    {# Make the icon change when hovering over it: #}
-                    <span>
-                        <img height="20px" class="default"
-                             src="{% static 'letters/icon_white.svg' %}">
-                        <img height="20px" class="hover"
-                             src="{% static 'letters/icon.svg' %}">
-                    </span>Startseite
-                </a>
-            {% endif %}
+        {# Collapse toggler #}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Navigation anzeigen">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            {# Letters index #}
-            {% if '/letters/' in request.path %}
-                <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button w3-theme-l1 w3-hover-white">Elternbriefe</a>
-            {% else %}
-                <a href="{% url 'letters:letters' %}" class="w3-bar-item w3-button w3-hover-white">Elternbriefe</a>
-            {% endif %}
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+
+                {# Letters index #}
+                {% if '/letters/' in request.path %}
+                    <li class="nav-item active">
+                        <a href="{% url 'letters:letters' %}" class="nav-link">Elternbriefe</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'letters:letters' %}" class="nav-link">Elternbriefe</a>
+                    </li>
+                {% endif %}
+            </ul>
 
             {# Login #}
-            {% block login %}
-                {% if request.user.is_authenticated %}
-                    {# If the user is logged in, show their username and a logout button in a dropdown menu #}
-                    <div class="w3-dropdown-hover w3-right">
-                        <button class="w3-button w3-hover-white" style="min-width:150px">
-                            <i class="fa fa-user"></i> {{ user.username }}
-                        </button>
-                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                            <a href="{% url 'letters:logout' %}" class="w3-bar-item w3-button w3-hover-white">
-                                <i class="fa fa-sign-out"></i> Ausloggen
-                            </a>
-                        </div>
-                    </div>
-                {% else %}
-                    <a href="{% url 'letters:login' %}" class="w3-bar-item w3-button w3-right w3-hover-white">
-                        <i class="fa fa-user-circle"></i> Login
+            {% if request.user.is_authenticated %}
+                {# If the user is logged in, show their username and a logout button in a dropdown menu #}
+                <div class="dropdown">
+                    <a class="btn btn-outline-light dropdown-toggle" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                        <ion-icon class="align-text-top" name="person-circle"></ion-icon>
                     </a>
-                {% endif %}
-            {% endblock %}
-
+                    <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="navbarDropdown">
+                        {% if request.user.is_staff %}
+                            <a href="{% url 'letters:user_import' %}" class="dropdown-item btn" role="button">
+                                Nutzer-Import
+                                <ion-icon class="align-text-top" name="people"></ion-icon>
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'letters:logout' %}" class="dropdown-item btn" role="button">
+                            Ausloggen
+                            <ion-icon class="align-text-top" name="log-out"></ion-icon>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                {# If user is not logged in, show login form: #}
+                <div class="dropdown">
+                    <a class="btn btn-outline-light dropdown-toggle" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Login
+                        <ion-icon name="log-in" class="align-text-top"></ion-icon>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-sm-right">
+                        <form class="px-4 py-3" action="{% url 'letters:login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="LoginFormUsername">Nutzername</label>
+                                <input type="text" class="form-control" name="LoginFormUsername" id="LoginFormUsername"
+                                       placeholder="Nutzer">
+                            </div>
+                            <div class="form-group">
+                                <label for="LoginFormPassword">Passwort</label>
+                                <input type="password" class="form-control" name="LoginFormPassword"
+                                       id="LoginFormPassword" placeholder="Passwort">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Einloggen</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    </div>
+    </nav>
 {% endblock %}
 
-{# Display floating notifications at the top of the page: #}
-<section>
-    {% block messages %}
-        {% if messages %}
-            <div class="message-container">
+{# Display notifications #}
+{% block messages %}
+    <div class="container-fluid" style="position: fixed; z-index: 1">
+        <div class="row justify-content-center">
+            <div class="col-10 col-md-8 col-lg-6">
                 {% for message in messages %}
-                    <message class="w3-panel w3-card-4 w3-round message{% if message.tags %} {{ message.tags }}{% endif %}">
-                            <span onclick="this.parentElement.style.display='none'"
-                                  class="w3-button w3-large w3-round w3-display-topright w3-hover-white">&times
-                            </span>
-                            <h3>
-                                {% if "error" in message.tags %}
-                                    Fehler!
-                                {% elif "warning" in message.tags %}
-                                    Warnung!
-                                {% elif "success" in message.tags %}
-                                    Erfolg!
-                                {% else %}
-                                    Hinweis
-                                {% endif %}
-                            </h3>
-                            <p>{{ message }}</p>
-                        </message>
+                    {% if "error" in message.tags %}
+                        <div class="alert alert-danger alert-dismissible fade show shadow mt-2" role="alert"
+                             aria-live="assertive" aria-atomic="true">
+                            <ion-icon class="align-text-bottom" name="alert-circle" size="large"></ion-icon>
+                            <strong>Fehler!</strong>
+                            {{ message }}
+                            <button class="close" type="button" aria-label="Close" data-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% elif "warning" in message.tags %}
+                        <div class="alert alert-warning alert-dismissible fade show shadow mt-2" role="alert"
+                             aria-live="assertive" aria-atomic="true">
+                            <ion-icon class="align-text-bottom" name="warning" size="large"></ion-icon>
+                            <strong>Fehler!</strong>
+                            {{ message }}
+                            <button class="close" type="button" aria-label="Close" data-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% elif "success" in message.tags %}
+                        <div class="alert alert-success alert-dismissible fade show shadow mt-2" role="alert"
+                             aria-live="assertive" aria-atomic="true">
+                            <ion-icon class="align-text-bottom" name="checkmark-circle" size="large"></ion-icon>
+                            <strong>Fehler!</strong>
+                            {{ message }}
+                            <button class="close" type="button" aria-label="Close" data-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info alert-dismissible fade show shadow mt-2" role="alert"
+                             aria-live="assertive" aria-atomic="true">
+                            <ion-icon class="align-text-bottom" name="information-circle" size="large"></ion-icon>
+                            <strong>Fehler!</strong>
+                            {{ message }}
+                            <button class="close" type="button" aria-label="Close" data-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
-        {% endif %}
-    {% endblock %}
-</section>
+        </div>
+    </div>
+
+{% endblock %}
 
 {% block content %}
 {% endblock %}
 
-{% block script %}
+{# Additional JS #}
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+{% block script-extra %}
 {% endblock %}
 
 </body>

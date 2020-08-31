@@ -6,26 +6,31 @@
 
 {% block content %}
 
-    <section class="page-content">
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-4 col-md-6 col-sm-8 col-10 text-center">
             <p>Folgende Elternbriefe liegen vor:</p>
 
             {% for child in children_list %}
-                <div class="child-card w3-card w3-margin w3-round">
-                    <header class="w3-container w3-theme w3-round">
-                        <h2>{{ child }}</h2>
-                    </header>
-                    {% with child_id=child.id %}
-                        {% for letter in letters|get_item:child_id %}
-                                <a href="{% url 'letters:letter_detail' child.pk letter.pk %}">
-                                    {% if not child in letter.students_viewed.all %}
-                                        <i class="fa fa-exclamation"
-                                           style="color: red"></i>{% endif %} {{ letter }}
-                                </a>
-                        {% endfor %}
-                    {% endwith %}
+                <div class="card shadow my-2">
+                    <h3 class="card-header bg-primary text-light">{{ child }}</h3>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {% with child_id=child.id %}
+                                {% for letter in letters|get_item:child_id %}
+                                    <li class="list-group-item">
+                                        <a href="{% url 'letters:letter_detail' child.pk letter.pk %}">
+                                            {% if not child in letter.students_viewed.all %}
+                                                <ion-icon name="warning"></ion-icon>
+                                            {% endif %} {{ letter }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% endwith %}
+                        </ul>
+                    </div>
                 </div>
             {% endfor %}
-
-    </section>
+        </div>
+    </div>
 
 {% endblock %}

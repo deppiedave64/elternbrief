@@ -9,15 +9,17 @@ import django_tables2 as tables
 
 
 class LetterResultTable(tables.Table):
+    """Displays information on the students that have confirmed a given letter."""
+
     last_name = tables.Column(verbose_name="Nachname")
     first_name = tables.Column(verbose_name="Vorname")
     class_grp = tables.Column(verbose_name="Klasse")
     confirmed = tables.Column(verbose_name="Bestätigt?")
 
     class Meta:
-        template_name = 'django_tables2/bootstrap4.html'
+        template_name = 'django_tables2/bootstrap-responsive.html'
         attrs = {
-            'class': 'w3-table-all'
+            'class': 'table table-hover table-striped'
         }
         row_attrs = {
             'class': lambda record: 'w3-hover-indigo'
