@@ -6,22 +6,22 @@
 
 {% block content %}
 
-    <div class="w3-row-padding w3-padding-64 w3-container">
-        <div class="w3-content w3-center">
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-4 col-md-6 col-sm-8 col-10 text-center">
             <p>Folgende Elternbriefe liegen vor:</p>
 
-            <div class="w3-card w3-margin w3-round">
-                <header class="w3-container w3-theme w3-round">
-                    <h2>Eigene Elternbriefe:</h2>
-                </header>
-                <div class="w3-container">
-                    {% for letter in letters %}
-                        <p><a href="{% url 'letters:letter_result' letter.pk %}">{{ letter }}</a></p>
-                    {% endfor %}
+            <div class="card shadow">
+                <h3 class="card-header bg-primary text-light">Eigene Elternbriefe:</h3>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for letter in letters %}
+                            <li class="list-group-item">
+                                <a href="{% url 'letters:letter_result' letter.pk %}">{{ letter }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
-
         </div>
     </div>
-
 {% endblock %}

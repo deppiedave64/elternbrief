@@ -9,8 +9,10 @@ from django.contrib.auth import authenticate, login as dj_login, \
     logout as dj_logout
 from django_tables2 import RequestConfig, Column
 
-from .models import Letter, Student, Response
-from .tables import LetterResultTable
+from .models import Letter, Response
+from .tables import *
+from .forms import UserImportForm
+from .user_import import *
 
 
 def index(request):
@@ -97,13 +99,13 @@ def letter_detail(request, student_id: int, letter_id: int,
         student = get_object_or_404(Student, pk=student_id)
 
         # Make sure that user is parent of that student:
-        if not student in request.user.profile.children.all():
+        if student not in request.user.profile.children.all():
             messages.error(request,
                            "Für diesen Schüler dürfen Sie keine Briefe betrachten!")
             return redirect('letters:letters')
 
         # Make sure that this letter concerns that student:
-        if not letter in student.letters:
+        if letter not in student.letters:
             messages.error(request,
                            "Dieser Brief betrifft nicht diesen Schüler.")
             return redirect('letters:letters')
@@ -219,28 +221,28 @@ def login(request):
     """
 
     # Check whether user has already entered credentials:
-    if 'username' in request.POST.keys() and 'password' in request.POST.keys():
+    if 'LoginFormUsername' in request.POST.keys() and 'LoginFormPassword' in request.POST.keys():
         # Retrieve credentials from POST arguments:
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST['LoginFormUsername']
+        password = request.POST['LoginFormPassword']
         # Check whether the credentials are correct:
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # If credentials are corrected login user and redirect to index:
+            # If credentials are correct login user and redirect to index:
             dj_login(request, user)
 
             return redirect('letters:index')
 
         else:
-            # If credentials are wrong, redirect to this page and show an error message:
+            # If credentials are wrong, redirect to index and show an error message:
             messages.error(request,
                            "Nutzername oder Passwort sind falsch. Bitte versuchen Sie es erneut.")
-            return render(request, 'letters/login.html')
+            return redirect('letters:index')
 
-    # If the user has not already entered any credentials, just show the login page:
+    # If the user has not already entered any credentials, redirect to the index:
     else:
-        return render(request, 'letters/login.html')
+        return redirect('letters:index')
 
 
 def logout(request):
@@ -252,3 +254,54 @@ def logout(request):
 
     dj_logout(request)
     return redirect('letters:index')
+
+
+@staff_member_required
+def user_import(request):
+    """Page for uploading csv files for bulk creation of new users and students.
+
+    :param request: Current request
+    :return: User import page
+    """
+
+    if request.method == 'POST':
+        # Bind data to form:
+        form = UserImportForm(request.POST, request.FILES)
+
+        # If submitted data is not valid, display error:
+        if not form.is_valid():
+            messages.error(request, "Das Formular war nicht korrekt ausgefüllt. "
+                                    "Achten Sie darauf, dass sie gültige csv-Dateien auswählen.")
+            form = UserImportForm()
+            return render(request, 'letters/user_import.html', {'form': form})
+        else:
+            # Make sure that there are no import_ids left from previous runs:
+            for profile in Profile.objects.filter(import_id__isnull=False):
+                profile.import_id = None
+
+            try:
+                parents = read_parents(request.FILES['parents_file'])
+                for parent in parents:
+                    create_parent(parent)
+
+                students = read_students(request.FILES['students_file'])
+                for student in students:
+                    create_student(student)
+
+                parents_table = UserImportParentsTable(parents)
+                students_table = UserImportStudentsTable(students)
+
+                RequestConfig(request).configure(parents_table)
+                RequestConfig(request).configure(students_table)
+
+            except UserImportError as e:
+                messages.error(request, e.message)
+                return render(request, 'letters/user_import.html', {'form': form})
+
+            return render(request, 'letters/user_import.html',
+                          {'form': form, 'parents_table': parents_table, 'students_table': students_table})
+
+    else:
+        # Create blank form:
+        form = UserImportForm()
+        return render(request, 'letters/user_import.html', {'form': form})

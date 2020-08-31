@@ -1,0 +1,66 @@
+{% extends 'letters/base.html' %}
+
+{% load render_table from django_tables2 %}
+
+{% block title %}Nutzer-Import{% endblock %}
+
+{% block content %}
+    {% if parents_table or students_table %}
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6 col-sm-8 col-10 text-center">
+                <div class="card shadow">
+                    <p class="my-3">Die folgenden Eltern wurden erstellt:</p>
+                    {% render_table parents_table %}
+                    <p class="my-3">Die folgenden Schüler wurden erstellt:</p>
+                    {% render_table students_table %}
+                    {{ form.confirm_upload }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-6 col-md-8 col-10 text-center">
+            <div class="card shadow">
+                <div class="mx-3 my-3">
+                    <p>Hier können Daten über neue Schüler und Eltern aus csv-Dateien importiert werden.</p>
+                    <p>Die csv-Datei für die Eltern muss dem Format folgen:</p>
+                    <pre><code>[ID], [Nachname], [Vorname], [E-Mail]</code></pre>
+                    <p>Die csv-Datei für die Schüler muss dem Format folgen:</p>
+                    <pre><code>[Nachname], [Vorname], [Klasse], [ID Elternteil 1], [ID Elternteil 2 (optional)]</code></pre>
+                    <p>Klassen, die noch nicht existieren, werden automatisch angelegt. Bitte achten Sie darauf, dass
+                        die ausgewählten Dateien UTF-8-kodiert sind!</p>
+                </div>
+
+                <form action="{% url 'letters:user_import' %}" method="post" enctype="multipart/form-data"
+                      class="mt-3 pr-5">
+                    {% csrf_token %}
+
+                    {{ form.non_field_errors }}
+
+                    <div class="custom-file mx-3 my-2">
+                        {{ form.parents_file.errors }}
+                        {{ form.parents_file }}
+                        <label for="{{ form.parents_file.id_for_label }}" class="custom-file-label">Eltern-CSV</label>
+                    </div>
+
+                    <div class="custom-file mx-3 my-2">
+                        {{ form.students_file.errors }}
+                        {{ form.students_file }}
+                        <label for="{{ form.students_file.id_for_label }}" class="custom-file-label">Schüler-CSV</label>
+                    </div>
+
+                    <button class="btn btn-primary my-5" type="submit">
+                        <ion-icon name="cloud-upload"></ion-icon>
+                        Hochladen
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script-extra %}
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"
+            crossorigin="anonymous"></script>
+{% endblock %}

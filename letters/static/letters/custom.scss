@@ -1,0 +1,38 @@
+$theme-colors: (
+        "primary": #3f51b5,
+        "secondary": #6271c8,
+);
+
+$enable-shadows: true;
+
+// Import Bootstrap scss
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+body {
+  font-family: sans-serif;
+}
+
+h1, h2, h3, nav, button {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* CSS for changing the logo in the navbar when hovering over it */
+.navbar-brand img {
+  margin-right: 8px;
+}
+
+.navbar-brand img.hover {
+  display: none;
+}
+
+.navbar-brand img.default {
+  display: inline-block;
+}
+
+.navbar-brand:hover img.hover {
+  display: inline-block;
+}
+
+.navbar-brand:hover img.default {
+  display: none;
+}
