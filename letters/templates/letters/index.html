@@ -5,13 +5,18 @@
 {% block title %}Startseite{% endblock %}
 
 {% block content %}
-    <header class="w3-container w3-theme w3-center" style="padding: 128px">
-        <img src="{% static 'letters/vertical_white.svg' %}">
-        <p class="w3-xlarge">Herzlich willkommen bei <i>Elternbrief!</i></p>
-    </header>
 
-    <div class="w3-row-padding w3-padding-64 w3-container">
-        <div class="w3-content w3-center">
+    <div class="jumbotron-fluid bg-primary text-white">
+        <div class="row justify-content-center">
+            <div class="col-sm-8 col-md-6 col-lg-4 text-center mt-5">
+                <img class="img-fluid" src="{% static 'letters/vertical_white.svg' %}">
+                <p class="pt-5">Herzlich willkommen bei <i>Elternbrief</i>!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center pt-5">
+        <div class="col-md-6 col-sm-8 col-10 text-center">
             <p>Sie sehen die Startseite.</p>
 
             {% if request.user.is_staff %}

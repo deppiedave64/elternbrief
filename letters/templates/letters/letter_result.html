@@ -5,13 +5,10 @@
 
 {% block title %}{{ letter }}Ergebnisse{% endblock %}
 
-{% block head_extra %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-{% endblock %}
-
 {% block content %}
-    <div class="w3-padding-64 w3-container w3-center">
-        {% render_table table %}
+    <div class="row justify-content-center my-5">
+        <div class="col-10">
+            {% render_table table %}
+        </div>
     </div>
 {% endblock %}

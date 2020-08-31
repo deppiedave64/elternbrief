@@ -18,7 +18,8 @@ urlpatterns = [
          views.letter_detail, {'confirmation': True},
          name='letter_confirm'),
     path('letters/results/<int:letter_id>/', views.letter_result,
-         name='letter_result')
+         name='letter_result'),
+    path('letters/user_import/', views.user_import, name='user_import'),
 ]
 
 # Allow uploaded files to be served as static files while DEBUG is on.

@@ -8,88 +8,121 @@
 {% endblock %}
 
 {% block content %}
-    <section class="page-content">
-
-        {# Actual content: #}
-            <p>Sie betrachten diesen Brief gerade für den Schüler <b>{{ student }}.</b></p>
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-4 col-md-6 col-sm-8 col-10 text-center">
+            <p>Sie betrachten diesen Brief gerade für den Schüler <b>{{ student }}</b>.</p>
             {% if response and letter.confirmation %}
                 <p>
-                    <i class="fa fa-check-circle" style="color: #4caf50;"></i>
+                    <ion-icon name="checkmark-done"></ion-icon>
                     Sie haben diesen Brief bereits am {{ response.response_date }} bestätigt.
                 </p>
             {% endif %}
 
-            <div class="letter-detail w3-card-4 w3-round">
-
-                <header class="w3-container w3-theme-d2 w3-left-align w3-round">
-                    <h1>{{ letter }}</h1>
-                </header>
-
-                <p><b>Veröffentlichungsdatum:</b> {{ letter.date_published }}</p>
-
-                {% if letter.date_due %}
-                    <p><b>Fällig bis:</b> {{ letter.date_due }}</p>
-                {% endif %}
-
-                {% if letter.teacher %}
-                    <p><b>Zuständige Lehrkraft:</b> {{ letter.teacher }}</p>
-                {% endif %}
-
-                <p><b>Muss {% if not letter.confirmation %}nicht {% endif %}bestätigt werden.</b>
-                    <i class="fa fa-info-circle"></i></p>
-
-{#                <div class="w3-container" id="canvas">#}
-{#                    <embed src="{{ letter.document.url }}" type="application/pdf" width="100%" height="800px"/>#}
-{#                </div>#}
-                <button class="w3-btn w3-theme-d2 w3-margin"><a class="pdf-link" href="{{ letter.document.url }}" target="_blank">Download</a></button>
-
-                <canvas class="pdf-canvas w3-round w3-border" width="100%" height="100%"></canvas>
-
-                {# Section for responding to a letter: #}
+            <div class="card shadow text-left">
+                <h3 class="card-header bg-primary text-light text-center">{{ letter }}</h3>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Veröffentlichungsdatum: <b>{{ letter.date_published }}</b>
+                        </li>
+                        {% if letter.date_due %}
+                            <li class="list-group-item">
+                                Fällig bis: <b>{{ letter.date_due }}</b>
+                            </li>
+                        {% endif %}
+                        {% if letter.teacher %}
+                            <li class="list-group-item">
+                                Zuständige Lehrkraft: <b>{{ letter.teacher }}</b>
+                            </li>
+                        {% endif %}
+                        {% if letter.confirmation %}
+                            <li class="list-group-item">
+                                Muss bestätigt werden.
+                                <ion-icon name="information-circle"></ion-icon>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item text-muted">
+                                Muss nicht bestätigt werden.
+                                <ion-icon name="information-circle"></ion-icon>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <canvas class="pdf-canvas" width="100%" height="100%"></canvas>
+                </div>
+                <div class="card-body text-center">
+                    <a href="{{ letter.document.url }}" class="card-link pdf-link" target="_blank">
+                        <ion-icon name="download"></ion-icon>
+                        Download
+                    </a>
+                </div>
                 {% if not response and letter.confirmation %}
-                    <form action="{% url 'letters:letter_confirm' student.id letter.id %}" method="post">
-                        {% csrf_token %}
-                        <h3>Diesen Brief bestätigen:</h3>
+                    <div class="card-body">
+                        <hr>
+                        <form action="{% url 'letters:letter_confirm' student.id letter.id %}" method="post">
+                            {% csrf_token %}
+                            <h5>Diesen Brief bestätigen:</h5>
 
-                        {% for field in text_fields %}
-                            <p>{{ field.description }}: {% if not field.optional %}
-                                <i class="fa fa-asterisk w3-tiny"></i>{% endif %}</p>
-                            <input class="w3-input w3-border w3-round w3-margin-bottom" type="text"
-                                   name="{{ field.name }}" id="{{ field.name }}">
-                        {% endfor %}
+                            {% for field in text_fields %}
+                                <div class="form-group my-3">
+                                    <label for="{{ field.name }}">
+                                        {{ field.description }}
+                                        {% if not field.optional %}
+                                            <ion-icon class="text-danger" name="alert"></ion-icon>
+                                        {% endif %}
+                                    </label>
+                                    <input type="text" class="form-control" id="{{ field.name }}"
+                                           name="{{ field.name }}">
+                                </div>
+                            {% endfor %}
 
-                        {% for field in bool_fields %}
-                            <input class="w3-check w3-margin-top w3-margin-bottom" type="checkbox"
-                                   name="{{ field.name }}" id="{{ field.name }}">
-                            <label>{{ field.description }} {% if field.must_be_true %}
-                                <i class="fa fa-asterisk w3-tiny"></i>{% endif %}</label>
-                        {% endfor %}
+                            {% for field in bool_fields %}
+                                <div class="form-check my-3">
+                                    <input type="checkbox" class="form-check-input" value="" id="{{ field.name }}"
+                                           name="{{ field.name }}">
+                                    <label for="{{ field.name }}" class="form-check-label">
+                                        {{ field.description }}
+                                        {% if field.must_be_true %}
+                                            <ion-icon class="text-danger" name="alert"></ion-icon>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            {% endfor %}
 
-                        {% for field in selection_fields %}
-                            <p>{{ field.description }}: <i class="fa fa-asterisk w3-tiny"
-                                                                                 style="color: red"></i></p>
-                            <select class="w3-select w3-round" name="{{ field.name }}" id="{{ field.name }}">
-                                <option value="" disabled selected>Bitte auswählen:</option>
-                                {% for option in field.options_list %}
-                                    <option value="{{ option }}">{{ option }}</option>
-                                {% endfor %}
-                            </select>
-                        {% endfor %}
+                            {% for field in selection_fields %}
+                                <div class="form-group my-3">
+                                    <label for="{{ field.name }}">
+                                        {{ field.description }}
+                                        <ion-icon class="text-danger" name="alert"></ion-icon>
+                                    </label>
+                                    <select name="{{ field.name }}" id="{{ field.name }}" class="form-control">
+                                        <option value="" disabled selected>Bitte auswählen:</option>
+                                        {% for option in field.options_list %}
+                                            <option value="{{ option }}">{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endfor %}
 
-                        <p class="w3-margin"><i class="fa fa-asterisk w3-small"></i> Markiert
-                            Pflichtfelder.</p>
+                            <p>
+                                <ion-icon class="text-danger" name="alert"></ion-icon>
+                                markiert Pflichtfelder.
+                            </p>
 
-                        <button class="w3-btn w3-theme-d2 w3-margin" type="submit"><i class="fa fa-check"></i>
-                            Bestätigen
-                        </button>
-                    </form>
+                            <button class="btn btn-primary" type="submit">
+                                <ion-icon name="checkmark-done"></ion-icon>
+                                Bestätigen
+                            </button>
+                        </form>
+                    </div>
                 {% endif %}
 
             </div>
-
-    </section>
+        </div>
+    </div>
 {% endblock %}
 
-{% block script %}
+{% block script-extra %}
     <script src="{% static 'letters/view-pdf.js' %}"></script>
 {% endblock %}
