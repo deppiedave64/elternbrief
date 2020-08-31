@@ -99,13 +99,13 @@ def letter_detail(request, student_id: int, letter_id: int,
         student = get_object_or_404(Student, pk=student_id)
 
         # Make sure that user is parent of that student:
-        if not student in request.user.profile.children.all():
+        if student not in request.user.profile.children.all():
             messages.error(request,
                            "Für diesen Schüler dürfen Sie keine Briefe betrachten!")
             return redirect('letters:letters')
 
         # Make sure that this letter concerns that student:
-        if not letter in student.letters:
+        if letter not in student.letters:
             messages.error(request,
                            "Dieser Brief betrifft nicht diesen Schüler.")
             return redirect('letters:letters')
